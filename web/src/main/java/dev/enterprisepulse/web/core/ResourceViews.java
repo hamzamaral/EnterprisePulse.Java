@@ -5,6 +5,8 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import dev.enterprisepulse.web.core.Meta.ResourceMeta;
+import dev.enterprisepulse.web.views.assets.AssetDialogs;
+import dev.enterprisepulse.web.views.assets.AssetTabs;
 import dev.enterprisepulse.web.views.hr.LeaveRequestDialog;
 import dev.enterprisepulse.web.views.hr.TerminateDialog;
 import dev.enterprisepulse.web.views.platform.CompanyCreateDialog;
@@ -89,6 +91,8 @@ public final class ResourceViews {
         public boolean hideEdit;
         public boolean hideDelete;
         public String createHref;
+        /** Custom record page such as "assets/counts/{id}" instead of the generic detail view. */
+        public String detailHref;
         /** Opens a custom create dialog; the argument is called after a successful save. */
         public Consumer<Runnable> createDialog;
         public final List<Action> actions = new ArrayList<>();
@@ -114,6 +118,56 @@ public final class ResourceViews {
     static {
         platform();
         hr();
+        assets();
+    }
+
+    private static void assets() {
+        configure("assets", v -> {
+            v.columns = List.of("assetTag", "name", "categoryId", "brand", "model", "status", "condition", "locationId");
+            v.filterFields = List.of("status", "condition", "categoryId", "locationId", "purchaseDate", "warrantyEndDate");
+            v.readOnlyFields = Set.of("status", "retiredAt", "retireReason");
+            v.actions.add(new Action("Zimmetle", "Assign").icon(VaadinIcon.USER_CHECK).permission("assets:assign")
+                    .visible(Action.statusIn("IN_STOCK")).run(AssetDialogs.assign(false)));
+            v.actions.add(new Action("Devret", "Transfer").icon(VaadinIcon.EXCHANGE).permission("assets:assign")
+                    .visible(Action.statusIn("ASSIGNED")).run(AssetDialogs.assign(true)));
+            v.actions.add(new Action("İade al", "Take back").icon(VaadinIcon.ARROW_BACKWARD).permission("assets:assign")
+                    .visible(Action.statusIn("ASSIGNED")).run(AssetDialogs::returnAsset));
+            v.actions.add(new Action("Hizmet dışı bırak", "Retire").icon(VaadinIcon.BAN).theme("error").permission("assets:update")
+                    .visible(Action.statusIn("IN_STOCK")).run(AssetDialogs::retire));
+            v.actions.add(new Action("QR etiketi", "QR label").icon(VaadinIcon.QRCODE).theme("contrast").endpoint("/api/assets/{id}/label").download());
+            v.tabs.add(new Tab("Amortisman ve etiket", "Depreciation and label", null, AssetTabs::overview));
+            v.tabs.add(new Tab("Zimmet geçmişi", "Assignment history", null, AssetTabs::assignments));
+            v.tabs.add(new Tab("Bakım", "Maintenance", null, AssetTabs::maintenance));
+        });
+        configure("asset-assignments", v -> {
+            v.columns = List.of("number", "assetId", "assigneeType", "employeeId", "departmentId", "locationId", "assignedAt", "returnedAt", "acknowledgedAt", "status");
+            v.filterFields = List.of("status", "assigneeType", "assetId", "employeeId", "departmentId", "assignedAt");
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+            v.detailHref = "assets/assignments/{id}";
+        });
+        configure("asset-counts", v -> {
+            v.columns = List.of("number", "countDate", "locationId", "categoryId", "status", "createdById", "completedAt");
+            v.filterFields = List.of("status", "locationId", "categoryId", "countDate");
+            v.createDialog = AssetDialogs::createCount;
+            v.hideEdit = true;
+            v.hideDelete = true;
+            v.detailHref = "assets/counts/{id}";
+        });
+        configure("asset-categories", v -> {
+            v.columns = List.of("code", "name", "usefulLifeMonths", "isActive");
+            v.links.add(new HeaderLink("Konumlar", "Locations", "r/asset-locations", VaadinIcon.MAP_MARKER));
+        });
+        configure("asset-locations", v -> {
+            v.columns = List.of("code", "name", "branchId", "description", "isActive");
+            v.links.add(new HeaderLink("Kategoriler", "Categories", "r/asset-categories", VaadinIcon.CUBES));
+        });
+        configure("asset-maintenances", v -> {
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
     }
 
     private static void hr() {

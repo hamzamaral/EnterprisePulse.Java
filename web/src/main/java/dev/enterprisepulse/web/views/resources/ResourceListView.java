@@ -321,7 +321,8 @@ public class ResourceListView extends Div implements BeforeEnterObserver, HasDyn
     }
 
     private void open(ObjectNode row) {
-        UI.getCurrent().navigate("r/" + resource + "/" + ApiClient.enc(row.path(meta.keyField()).asText()));
+        String key = ApiClient.enc(row.path(meta.keyField()).asText());
+        UI.getCurrent().navigate(view.detailHref != null ? view.detailHref.replace("{id}", key) : "r/" + resource + "/" + key);
     }
 
     private Component actionButtons(ObjectNode row) {

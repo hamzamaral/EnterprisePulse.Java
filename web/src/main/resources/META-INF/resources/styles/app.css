@@ -254,6 +254,11 @@ vaadin-app-layout.ep-shell > :not([slot]) {
     border-radius: 10px;
 }
 
+vaadin-grid.ep-grid[all-rows-visible] {
+    height: auto;
+    min-height: 0;
+}
+
 .ep-clickable::part(row) {
     cursor: pointer;
 }
@@ -778,3 +783,172 @@ td.ep-day { display: table-cell; }
 .ep-org-name { font-weight: 600; }
 
 .ep-org-card .ep-muted { display: block; font-size: 0.8rem; }
+
+/* Assets: card facts, depreciation, QR label, my assets, hand-over form, counts */
+.ep-form-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0 12px;
+}
+
+.ep-facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px 20px;
+}
+
+.ep-fact {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.ep-section h4 { margin: 0 0 12px; font-size: 1rem; }
+
+.ep-asset-overview {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(220px, 1fr);
+    gap: 16px;
+    align-items: start;
+}
+
+@media (max-width: 900px) {
+    .ep-asset-overview { grid-template-columns: 1fr; }
+}
+
+.ep-dep-head {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 16px;
+}
+
+.ep-dep-head .ep-grow { flex: 1; }
+
+.ep-section vaadin-grid { margin-top: 16px; }
+
+vaadin-grid::part(ep-row-current) { background: rgba(99, 102, 241, .08); font-weight: 600; }
+vaadin-grid::part(ep-row-scanned) { background: rgba(34, 197, 94, .14); }
+
+.ep-qr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+}
+
+.ep-qr h4 { align-self: stretch; text-align: left; }
+
+.ep-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 40px;
+    color: var(--lumo-secondary-text-color);
+}
+
+.ep-asset-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+}
+
+.ep-asset-card { display: flex; flex-direction: column; gap: 12px; }
+.ep-asset-card h4 { margin: 0; }
+.ep-subtitle { margin: 28px 0 10px; font-size: 1.15rem; }
+
+.ep-doc-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.ep-doc-toolbar .ep-grow { flex: 1; }
+
+.ep-doc {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 40px 48px;
+    background: var(--lumo-base-color);
+    border: 1px solid var(--lumo-contrast-10pct);
+    border-radius: 8px;
+    color: var(--lumo-body-text-color);
+}
+
+.ep-doc-head {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--lumo-contrast-60pct);
+    padding-bottom: 12px;
+}
+
+.ep-doc-company { font-weight: 700; font-size: 1.1rem; }
+.ep-doc h1 { text-align: center; font-size: 1.3rem; margin: 28px 0 20px; }
+.ep-doc h2 { font-size: 1rem; margin: 20px 0 8px; border-bottom: 1px solid var(--lumo-contrast-10pct); padding-bottom: 4px; }
+
+.ep-doc-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 12px;
+    padding: 3px 0;
+}
+
+.ep-doc-row > span:first-child { color: var(--lumo-secondary-text-color); }
+
+.ep-doc-table table { width: 100%; border-collapse: collapse; margin: 6px 0 10px; }
+.ep-doc-table th, .ep-doc-table td { border: 1px solid var(--lumo-contrast-20pct); padding: 6px 8px; text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+.ep-doc-table th { background: var(--lumo-contrast-5pct); font-weight: 600; }
+
+.ep-doc-statement { margin: 24px 0; line-height: 1.6; text-align: justify; }
+
+.ep-doc-signatures {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-top: 32px;
+}
+
+.ep-doc-sign {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 140px;
+    border-top: 1px solid var(--lumo-contrast-30pct);
+    padding-top: 10px;
+}
+
+.ep-doc-sign .ep-grow { flex: 1; display: flex; align-items: center; }
+
+.ep-doc-stamp {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #15803d;
+    border: 1px solid #22c55e;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: .85rem;
+}
+
+.ep-doc-stamp vaadin-icon { width: 16px; height: 16px; }
+
+.ep-count-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px 24px;
+    align-items: start;
+    margin-bottom: 8px;
+}
+
+.ep-count-bar { margin: 16px 0 12px; flex-wrap: wrap; gap: 12px; }
+.ep-scan { display: flex; gap: 8px; align-items: center; }
+.ep-text-error { color: var(--lumo-error-text-color); }
+.ep-text-warning { color: var(--lumo-warning-text-color, #b45309); }
+
+@media print {
+    .ep-doc { border: none; padding: 0; max-width: none; }
+}
