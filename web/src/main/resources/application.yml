@@ -1,0 +1,28 @@
+server:
+  port: 8181
+  servlet:
+    session:
+      timeout: 8h
+
+spring:
+  application:
+    name: enterprise-pulse-web
+  main:
+    banner-mode: off
+
+vaadin:
+  launch-browser: false
+  allowed-packages: dev.enterprisepulse.web
+  pnpm:
+    enable: false
+  devmode:
+    devTools:
+      enabled: false
+
+app:
+  api-url: http://localhost:8180
+
+logging:
+  level:
+    org.atmosphere: warn
+    com.vaadin.flow.server.frontend: warn

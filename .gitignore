@@ -1,0 +1,16 @@
+target/
+node_modules/
+*.log
+.idea/
+*.iml
+.vscode/
+web/frontend/generated/
+web/src/main/frontend/generated/
+web/src/main/bundles/
+web/package.json
+web/package-lock.json
+web/pnpm-lock.yaml
+web/tsconfig.json
+web/types.d.ts
+web/vite.config.ts
+web/vite.generated.ts

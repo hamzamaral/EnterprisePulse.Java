@@ -1,0 +1,43 @@
+name: enterprise-pulse-java
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: epjava-postgres
+    environment:
+      POSTGRES_USER: erp
+      POSTGRES_PASSWORD: erp
+      POSTGRES_DB: enterprise_pulse
+    ports:
+      - "5452:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U erp -d enterprise_pulse"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  storage:
+    image: rustfs/rustfs:latest
+    container_name: epjava-storage
+    environment:
+      RUSTFS_ACCESS_KEY: erpadmin
+      RUSTFS_SECRET_KEY: erpadmin123
+      RUSTFS_CONSOLE_ENABLE: "true"
+    ports:
+      - "9020:9000"
+      - "9021:9001"
+    volumes:
+      - storage:/data
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: epjava-mailpit
+    ports:
+      - "1045:1025"
+      - "8045:8025"
+
+volumes:
+  pgdata:
+  storage:

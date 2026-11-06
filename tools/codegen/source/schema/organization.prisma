@@ -1,0 +1,141 @@
+model Company {
+  id           String    @id @default(uuid()) @db.Uuid
+  code         String    @unique
+  name         String
+  legalName    String?
+  taxNumber    String?
+  taxOffice    String?
+  email        String?
+  phone        String?
+  address      String?
+  city         String?
+  country      String    @default("TR")
+  baseCurrency String    @default("TRY")
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  branches            Branch[]
+  memberships         UserCompany[]
+  roles               Role[]
+  userRoles           UserRole[]
+  files               FileObject[]
+  numberSequences     NumberSequence[]
+  taxRates            TaxRate[]
+  units               Unit[]
+  settings            Setting[]
+  workflowDefinitions WorkflowDefinition[]
+  workflowInstances   WorkflowInstance[]
+  departments         Department[]
+  positions           Position[]
+  employees           Employee[]
+  leaveTypes          LeaveType[]
+  leaveBalances       LeaveBalance[]
+  leaveRequests       LeaveRequest[]
+  holidays            Holiday[]
+  assetCategories     AssetCategory[]
+  assetLocations      AssetLocation[]
+  assets              Asset[]
+  assetAssignments    AssetAssignment[]
+  assetMaintenances   AssetMaintenance[]
+  assetCounts         AssetCount[]
+  shifts              Shift[]
+  shiftAssignments    ShiftAssignment[]
+  attendanceRecords   AttendanceRecord[]
+  productCategories   ProductCategory[]
+  products            Product[]
+  productVariants     ProductVariant[]
+  warehouses          Warehouse[]
+  stockBalances       StockBalance[]
+  stockLots           StockLot[]
+  lotBalances         LotBalance[]
+  serialNumbers       SerialNumber[]
+  stockMovements      StockMovement[]
+  stockTransactions   StockTransaction[]
+  stockCounts         StockCount[]
+  businessPartners    BusinessPartner[]
+  ledgerEntries       PartnerLedgerEntry[]
+  purchaseRequests    PurchaseRequest[]
+  supplierQuotes      SupplierQuote[]
+  purchaseOrders      PurchaseOrder[]
+  goodsReceipts       GoodsReceipt[]
+  purchaseInvoices    PurchaseInvoice[]
+  salesQuotes         SalesQuote[]
+  salesOrders         SalesOrder[]
+  stockReservations   StockReservation[]
+  deliveryNotes       DeliveryNote[]
+  salesInvoices       SalesInvoice[]
+  salesReturns        SalesReturn[]
+  treasuryAccounts    TreasuryAccount[]
+  treasuryTxs         TreasuryTransaction[]
+  partnerPayments     PartnerPayment[]
+  cheques             Cheque[]
+  leads               Lead[]
+  opportunities       Opportunity[]
+  crmActivities       CrmActivity[]
+  expenseCategories   ExpenseCategory[]
+  expenseReports      ExpenseReport[]
+  projects            Project[]
+  salaryRecords       SalaryRecord[]
+  payrollParameters   PayrollParameter[]
+  payrollPeriods      PayrollPeriod[]
+  payslips            Payslip[]
+  jobPostings         JobPosting[]
+  candidates          Candidate[]
+  jobApplications     JobApplication[]
+  interviews          Interview[]
+  jobOffers           JobOffer[]
+  competencies        Competency[]
+  reviewCycles        ReviewCycle[]
+  performanceReviews  PerformanceReview[]
+  trainingCourses     TrainingCourse[]
+  trainingSessions    TrainingSession[]
+  ticketCategories    TicketCategory[]
+  ticketSlaPolicies   TicketSlaPolicy[]
+  tickets             Ticket[]
+  contractTypes       ContractType[]
+  contracts           Contract[]
+  budgetItems         BudgetItem[]
+  budgets             Budget[]
+  budgetEntries       BudgetEntry[]
+  vehicles            Vehicle[]
+  vehicleFuelEntries  VehicleFuelEntry[]
+  vehicleServices     VehicleService[]
+  vehicleDocuments    VehicleDocument[]
+  ledgerAccounts      LedgerAccount[]
+  journalEntries      JournalEntry[]
+  eInvoices           EInvoice[]
+  billsOfMaterials    BillOfMaterials[]
+  workOrders          WorkOrder[]
+  productionRecords   ProductionRecord[]
+  timeEntries         TimeEntry[]
+
+  @@map("companies")
+}
+
+model Branch {
+  id        String    @id @default(uuid()) @db.Uuid
+  companyId String    @db.Uuid
+  code      String
+  name      String
+  email     String?
+  phone     String?
+  address   String?
+  city      String?
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  company        Company         @relation(fields: [companyId], references: [id])
+  memberships    UserCompany[]
+  employees      Employee[]
+  assetLocations AssetLocation[]
+  warehouses     Warehouse[]
+  jobPostings    JobPosting[]
+
+  @@unique([companyId, code])
+  @@index([companyId])
+  @@map("branches")
+}

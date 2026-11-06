@@ -1,0 +1,51 @@
+server:
+  port: 8180
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+
+spring:
+  application:
+    name: enterprise-pulse-api
+  datasource:
+    url: jdbc:postgresql://localhost:5452/enterprise_pulse
+    username: erp
+    password: erp
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+        order_inserts: true
+        auto_quote_keyword: true
+  flyway:
+    enabled: true
+  mail:
+    host: localhost
+    port: 1045
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 21MB
+  task:
+    scheduling:
+      pool:
+        size: 2
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+app:
+  web-app-url: http://localhost:8181
+  s3-endpoint: http://localhost:9020
+  cors-origins:
+    - http://localhost:8181
+
+logging:
+  level:
+    org.hibernate.orm.deprecation: error
