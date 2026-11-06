@@ -261,15 +261,14 @@ public class ResourceService {
         }
         apply(r, entity, body, true);
         assertParentEditable(r, entity);
-        FieldMeta number = r.field("number");
-        if (r.sequence != null && number != null && (read(number, entity) == null || read(number, entity).toString().isEmpty())) {
-            write(number, entity, numbering.next(r.sequence));
-        }
         FieldMeta createdBy = r.field("createdById");
         if (createdBy != null && read(createdBy, entity) == null) write(createdBy, entity, CurrentUser.get().userId);
-        validateRequired(r, entity);
         ResourceHook hook = hooks.get(resource);
         if (hook != null) hook.beforeSave(entity, true);
+        FieldMeta number = r.sequenceField();
+        boolean numbered = number != null && (read(number, entity) == null || read(number, entity).toString().isEmpty());
+        validateRequired(r, entity, numbered ? number : null);
+        if (numbered) write(number, entity, numbering.next(r.sequence));
         db.add(entity);
         db.flush();
         if (hook != null) hook.afterSave(entity, true);
@@ -282,10 +281,17 @@ public class ResourceService {
         Object entity = find(r, id);
         assertDraft(r, entity);
         assertParentEditable(r, entity);
-        apply(r, entity, body, false);
-        validateRequired(r, entity);
         ResourceHook hook = hooks.get(resource);
-        if (hook != null) hook.beforeSave(entity, false);
+        // Queries must not flush the half-applied entity: hooks compare it with its loaded state.
+        var flushMode = db.em().getFlushMode();
+        db.em().setFlushMode(jakarta.persistence.FlushModeType.COMMIT);
+        try {
+            apply(r, entity, body, false);
+            if (hook != null) hook.beforeSave(entity, false);
+            validateRequired(r, entity, null);
+        } finally {
+            db.em().setFlushMode(flushMode);
+        }
         db.flush();
         if (hook != null) hook.afterSave(entity, false);
         return entity;
@@ -356,9 +362,9 @@ public class ResourceService {
         }
     }
 
-    private static void validateRequired(ResourceMeta r, Object entity) {
+    private static void validateRequired(ResourceMeta r, Object entity, FieldMeta skip) {
         for (FieldMeta f : r.fields) {
-            if (!f.required || f.readOnly) continue;
+            if (!f.required || f.readOnly || f == skip) continue;
             Object v = read(f, entity);
             if (v == null || (v instanceof String s && s.isEmpty())) throw AppException.badRequest("Zorunlu alan: " + f.label.tr);
         }

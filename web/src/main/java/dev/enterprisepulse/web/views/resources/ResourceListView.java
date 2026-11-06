@@ -129,6 +129,12 @@ public class ResourceListView extends Div implements BeforeEnterObserver, HasDyn
             header.add(filterButton);
             buildFilters(filterPanel, filterFields);
         }
+        for (ResourceViews.HeaderLink link : view.links) {
+            if (link.permission() != null && !Session.current().has(link.permission())) continue;
+            Button b = new Button(Ui.T(link.label(), link.labelEn()), link.icon().create(), e -> Ui.go(link.href()));
+            b.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            header.add(b);
+        }
         MenuBar export = new MenuBar();
         export.addThemeVariants(MenuBarVariant.LUMO_ICON);
         SubMenu sub = export.addItem(VaadinIcon.DOWNLOAD.create()).getSubMenu();

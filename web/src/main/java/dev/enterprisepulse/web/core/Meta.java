@@ -60,6 +60,16 @@ public final class Meta {
             return null;
         }
 
+        /** Field filled from the document number series on create (number, employeeNo, assetTag, code). */
+        public FieldMeta sequenceField() {
+            if (sequence == null) return null;
+            for (String name : List.of("number", "employeeNo", "assetTag", "code")) {
+                FieldMeta f = field(name);
+                if (f != null) return f;
+            }
+            return null;
+        }
+
         public String keyField() {
             return field("id") != null ? "id" : field("code") != null ? "code" : fields.get(0).name();
         }

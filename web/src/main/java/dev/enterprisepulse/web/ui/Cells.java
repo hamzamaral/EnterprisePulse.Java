@@ -20,6 +20,11 @@ public final class Cells {
                 String raw = Fmt.raw(row.get(f.name()));
                 return raw == null ? new Span() : Ui.badge(Ui.meta().enumLabel(f.enumName(), raw, Ui.locale()), Fmt.statusColor(raw));
             }));
+        } else if (f.name().equals("color")) {
+            col = grid.addColumn(new ComponentRenderer<>(row -> {
+                String raw = Fmt.raw(row.get(f.name()));
+                return raw == null ? new Span() : new Span(Ui.dot(raw), new Span(raw));
+            }));
         } else {
             col = grid.addColumn(row -> Fmt.value(f, row.get(f.name()), Ui.meta(), Ui.locale(), labels));
         }

@@ -84,6 +84,14 @@ public final class Meta {
             return byName.get(name);
         }
 
+        public static final List<String> SEQUENCE_FIELD_NAMES = List.of("number", "employeeNo", "assetTag", "code");
+
+        /** Field filled from the document number series on create. */
+        public FieldMeta sequenceField() {
+            if (sequence == null) return null;
+            return SEQUENCE_FIELD_NAMES.stream().map(this::field).filter(java.util.Objects::nonNull).findFirst().orElse(null);
+        }
+
         /** Documents with lines are edited only while in draft; later steps go through actions. */
         public boolean draftLocked() {
             return draftOnly && !children.isEmpty();

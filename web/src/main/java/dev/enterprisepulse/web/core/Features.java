@@ -9,10 +9,11 @@ public final class Features {
     private Features() {}
 
     public static final Set<String> GROUPS = Set.of(
-            "Genel", "Onay Süreçleri", "Organizasyon", "Sistem");
+            "Genel", "İnsan Kaynakları", "Onay Süreçleri", "Organizasyon", "Sistem");
 
     public static final Set<String> PAGES = Set.of(
-            "", "workflow/inbox", "roles", "settings");
+            "", "workflow/inbox", "roles", "settings",
+            "hr/my-leave", "hr/my-attendance", "hr/org-chart", "hr/timesheet");
 
     public static boolean enabled(NavGroup g) {
         return GROUPS.contains(g.label().tr());

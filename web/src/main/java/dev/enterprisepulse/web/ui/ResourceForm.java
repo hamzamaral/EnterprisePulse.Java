@@ -38,7 +38,7 @@ public class ResourceForm extends FormLayout {
             if (!visible) continue;
             boolean editable = editable(f, view);
             if (isNew && !editable) continue;
-            if (isNew && f.name().equals("number") && resource.sequence() != null) continue;
+            if (isNew && f == resource.sequenceField()) continue;
             Component c = editable ? FieldInput.create(f, data, labels, false, onChange) : display(f, data.get(f.name()), labels);
             add(c);
             if (f.kind().equals("text") || f.kind().equals("json")) setColspan(c, columns >= 4 ? 4 : columns);
@@ -50,7 +50,7 @@ public class ResourceForm extends FormLayout {
         if (f.readOnly()) return isNew && resource.inCompositeKey(f.name());
         if (!isNew && resource.inCompositeKey(f.name())) return false;
         if (!isNew && f.name().equals("status") && resource.draftLocked()) return false;
-        if (!isNew && f.name().equals("number") && resource.sequence() != null) return false;
+        if (!isNew && f == resource.sequenceField()) return false;
         return true;
     }
 

@@ -148,6 +148,23 @@ public final class Ui {
         return s;
     }
 
+    /** Small colored circle (leave types, shifts). */
+    public static Span dot(String color) {
+        Span s = new Span();
+        s.addClassName("ep-dot");
+        s.getStyle().set("background", color == null ? "transparent" : color);
+        return s;
+    }
+
+    /** Caption over a big value, used by summary cards. */
+    public static Div stat(String caption, String value) {
+        Span v = new Span(value);
+        v.addClassName("ep-stat-value");
+        Div d = card(new Div(muted(caption)), v);
+        d.addClassName("ep-mini-stat");
+        return d;
+    }
+
     public static Button iconButton(VaadinIcon icon, String tooltip, Runnable click) {
         Button b = new Button(new Icon(icon), e -> click.run());
         b.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE, ButtonVariant.LUMO_ICON);

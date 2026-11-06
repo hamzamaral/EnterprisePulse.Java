@@ -5,6 +5,8 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import dev.enterprisepulse.web.core.Meta.ResourceMeta;
+import dev.enterprisepulse.web.views.hr.LeaveRequestDialog;
+import dev.enterprisepulse.web.views.hr.TerminateDialog;
 import dev.enterprisepulse.web.views.platform.CompanyCreateDialog;
 import dev.enterprisepulse.web.views.platform.UserCreateDialog;
 import dev.enterprisepulse.web.views.platform.UserRolesTab;
@@ -30,6 +32,13 @@ public final class ResourceViews {
     public record TabContext(ObjectNode record, ResourceMeta meta, Runnable onChanged) {}
 
     public record Tab(String title, String titleEn, String permission, Function<TabContext, Component> factory) {}
+
+    /** A button in the list header that opens a related page. */
+    public record HeaderLink(String label, String labelEn, String href, VaadinIcon icon, String permission) {
+        public HeaderLink(String label, String labelEn, String href, VaadinIcon icon) {
+            this(label, labelEn, href, icon, null);
+        }
+    }
 
     /** A button on a record (submit, approve, post, print...). Default run: POST endpoint with {comment}. */
     public static final class Action {
@@ -84,6 +93,7 @@ public final class ResourceViews {
         public Consumer<Runnable> createDialog;
         public final List<Action> actions = new ArrayList<>();
         public final List<Tab> tabs = new ArrayList<>();
+        public final List<HeaderLink> links = new ArrayList<>();
         public Set<String> hiddenChildren = Set.of();
         public String workflowEntity;
     }
@@ -103,6 +113,44 @@ public final class ResourceViews {
 
     static {
         platform();
+        hr();
+    }
+
+    private static void hr() {
+        configure("employees", v -> {
+            v.columns = List.of("employeeNo", "firstName", "lastName", "departmentId", "positionId", "managerId", "hireDate", "status");
+            v.filterFields = List.of("status", "departmentId", "positionId", "branchId", "employmentType", "managerId");
+            v.readOnlyFields = Set.of("status", "terminationDate", "terminationReason");
+            v.hiddenChildren = Set.of("shift-assignments", "attendance-records", "salary-records");
+            v.links.add(new HeaderLink("Organizasyon şeması", "Org chart", "hr/org-chart", VaadinIcon.SITEMAP));
+            v.actions.add(new Action("İşten çıkış", "Terminate").icon(VaadinIcon.USER_CLOCK).theme("error").permission("employees:update")
+                    .visible(Action.statusIn("ACTIVE")).run(TerminateDialog::open));
+        });
+        configure("departments", v -> v.columns = List.of("code", "name", "parentId", "managerId", "isActive"));
+        configure("positions", v -> v.columns = List.of("code", "name", "departmentId", "isActive"));
+        configure("leave-requests", v -> {
+            v.columns = List.of("number", "employeeId", "leaveTypeId", "startDate", "endDate", "days", "status", "createdAt");
+            v.filterFields = List.of("status", "employeeId", "leaveTypeId", "startDate");
+            v.createDialog = done -> LeaveRequestDialog.open(null, done);
+            v.hideEdit = true;
+            v.hideDelete = true;
+            v.workflowEntity = "LeaveRequest";
+            v.actions.add(new Action("İptal et", "Cancel").icon(VaadinIcon.CLOSE_CIRCLE).theme("error")
+                    .visible(Action.statusIn("PENDING", "APPROVED")).endpoint("/api/hr/leave-requests/{id}/cancel")
+                    .prompt("Açıklama", false).confirm("Talep iptal edilecek; onaylanmış izinlerde günler bakiyeye iade edilir."));
+        });
+        configure("leave-types", v -> {
+            v.columns = List.of("code", "name", "defaultDays", "isPaid", "requiresBalance", "color", "isActive");
+            v.links.add(new HeaderLink("İzin bakiyeleri", "Balances", "hr/leave-balances", VaadinIcon.WALLET));
+            v.links.add(new HeaderLink("Resmi tatiller", "Public holidays", "r/holidays", VaadinIcon.CALENDAR_O));
+        });
+        configure("holidays", v -> v.columns = List.of("date", "name"));
+        configure("leave-balances", v -> v.columns = List.of("employeeId", "leaveTypeId", "year", "entitledDays", "usedDays"));
+        configure("shifts", v -> {
+            v.columns = List.of("code", "name", "startTime", "endTime", "breakMinutes", "color", "isActive");
+            v.links.add(new HeaderLink("Haftalık plan", "Weekly plan", "hr/shift-plan", VaadinIcon.CALENDAR));
+            v.links.add(new HeaderLink("Puantaj", "Timesheet", "hr/timesheet", VaadinIcon.TABLE));
+        });
     }
 
     private static void platform() {

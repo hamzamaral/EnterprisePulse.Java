@@ -96,6 +96,13 @@ public class Db {
         else em.remove(entity);
     }
 
+    /** Value of a property as loaded from the database (call before anything flushes the entity). */
+    @SuppressWarnings("unchecked")
+    public <T> T original(Object entity, String property) {
+        var entry = em.unwrap(org.hibernate.engine.spi.SessionImplementor.class).getPersistenceContextInternal().getEntry(entity);
+        return entry == null ? null : (T) entry.getLoadedValue(property);
+    }
+
     public void flush() {
         em.flush();
     }
