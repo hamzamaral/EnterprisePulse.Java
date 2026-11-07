@@ -125,6 +125,7 @@ public final class ResourceViews {
         assets();
         inventory();
         sales();
+        work();
     }
 
     private static void inventory() {
@@ -385,6 +386,53 @@ public final class ResourceViews {
         });
         configure("number-sequences", v -> {
             v.hideCreate = true;
+            v.hideDelete = true;
+        });
+    }
+
+    private static void work() {
+        configure("leads", v -> {
+            v.columns = List.of("number", "companyName", "contactName", "city", "source", "status", "estimatedValue", "ownerId");
+            v.filterFields = List.of("status", "source", "ownerId");
+            v.detailHref = "crm/leads/{id}";
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("opportunities", v -> {
+            v.columns = List.of("number", "title", "partnerId", "stage", "amount", "probability", "expectedCloseDate", "ownerId");
+            v.filterFields = List.of("stage", "partnerId", "ownerId");
+            v.detailHref = "crm/opportunities/{id}";
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("crm-activities", v -> {
+            v.columns = List.of("type", "subject", "dueAt", "completedAt", "ownerId", "opportunityId", "partnerId");
+            v.filterFields = List.of("type", "ownerId");
+            v.detailHref = "crm/activities/{id}";
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("expense-reports", v -> {
+            v.columns = List.of("number", "employeeId", "projectId", "title", "totalAmount", "status", "paymentDate");
+            v.filterFields = List.of("status", "employeeId", "projectId");
+            v.detailHref = "expenses/reports/{id}";
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("expense-categories", v -> {
+            v.columns = List.of("code", "name", "kind", "rate", "limitAmount", "requiresReceipt", "isActive");
+            v.filterFields = List.of("kind", "isActive");
+        });
+        configure("projects", v -> {
+            v.columns = List.of("number", "name", "partnerId", "managerId", "status", "startDate", "dueDate", "budgetAmount", "expenseCost");
+            v.filterFields = List.of("status", "managerId", "partnerId");
+            v.detailHref = "projects/{id}";
+            v.hideCreate = true;
+            v.hideEdit = true;
             v.hideDelete = true;
         });
     }
