@@ -4,6 +4,9 @@ import dev.enterprisepulse.common.CurrentUser;
 import dev.enterprisepulse.common.Guard;
 import dev.enterprisepulse.data.Db;
 import dev.enterprisepulse.data.generated.BusinessPartner;
+import dev.enterprisepulse.data.generated.EInvoice;
+import dev.enterprisepulse.data.generated.EInvoiceEvent;
+import dev.enterprisepulse.data.generated.EInvoiceStatus;
 import dev.enterprisepulse.data.generated.InvoiceStatus;
 import dev.enterprisepulse.data.generated.LedgerDocumentType;
 import dev.enterprisepulse.data.generated.PaymentStatus;
@@ -15,6 +18,7 @@ import dev.enterprisepulse.data.generated.SalesInvoiceLine;
 import dev.enterprisepulse.data.generated.SalesOrder;
 import dev.enterprisepulse.data.generated.SalesOrderLine;
 import dev.enterprisepulse.data.generated.SalesOrderStatus;
+import dev.enterprisepulse.einvoice.EInvoiceRules;
 import dev.enterprisepulse.inventory.StockMovementService;
 import dev.enterprisepulse.partners.PartnerLedgerService;
 import dev.enterprisepulse.platform.NumberingService;
@@ -136,6 +140,21 @@ public class SalesInvoiceService {
         SalesInvoice invoice = Guard.found(db.first("select i from SalesInvoice i where i.id = ?1", SalesInvoice.class, id), "Satış faturası bulunamadı");
         Guard.state(invoice.status == InvoiceStatus.ISSUED, "Fatura zaten iptal edilmiş");
         Guard.state(invoice.paidAmount.signum() == 0, "Faturanın tahsilatı veya iadesi var; önce onu kaldırın");
+        EInvoice einvoice = db.first("select e from EInvoice e where e.salesInvoiceId = ?1", EInvoice.class, id).orElse(null);
+        EInvoiceRules.CancelCheck check = EInvoiceRules.salesCancelCheck(einvoice == null ? null : einvoice.profile, einvoice == null ? null : einvoice.status);
+        Guard.state(check.allowed(), check.reason() == null ? "Fatura iptal edilemez" : check.reason());
+        if (einvoice != null && check.cancelEInvoice()) {
+            einvoice.status = EInvoiceStatus.CANCELLED;
+            einvoice.statusCode = EInvoiceRules.Codes.CANCELLED;
+            einvoice.statusMessage = "e-Arşiv faturası iptal edildi (iptal raporuna eklendi)";
+            EInvoiceEvent event = new EInvoiceEvent();
+            event.eInvoiceId = einvoice.id;
+            event.status = EInvoiceStatus.CANCELLED;
+            event.code = EInvoiceRules.Codes.CANCELLED;
+            event.message = einvoice.statusMessage;
+            event.userId = CurrentUser.get().userId;
+            db.add(event);
+        }
         for (SalesInvoiceLine line : db.list("select l from SalesInvoiceLine l where l.invoiceId = ?1", SalesInvoiceLine.class, id)) {
             if (line.orderLineId == null) continue;
             SalesOrderLine orderLine = db.get(SalesOrderLine.class, line.orderLineId);

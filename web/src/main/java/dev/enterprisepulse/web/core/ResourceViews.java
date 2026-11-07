@@ -128,6 +128,85 @@ public final class ResourceViews {
         work();
         people();
         ops();
+        accounting();
+        production();
+    }
+
+    private static void accounting() {
+        configure("ledger-accounts", v -> {
+            v.columns = List.of("code", "name", "type", "level", "isSystem", "isActive");
+            v.filterFields = List.of("type", "isActive", "isSystem");
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+            v.detailHref = "accounting/accounts/{id}";
+            v.links.add(new HeaderLink("Muhasebe paneli", "Accounting overview", "accounting", VaadinIcon.DASHBOARD, "accounting:read"));
+        });
+        configure("journal-entries", v -> {
+            v.columns = List.of("number", "entryDate", "description", "source", "status", "total");
+            v.filterFields = List.of("status", "source", "entryDate");
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+            v.detailHref = "accounting/journal/{id}";
+            v.links.add(new HeaderLink("Muhasebe paneli", "Accounting overview", "accounting", VaadinIcon.DASHBOARD, "accounting:read"));
+        });
+        configure("journal-lines", v -> {
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("e-invoices", v -> {
+            v.columns = List.of("number", "direction", "profile", "status", "partnerId", "issueDate", "payableAmount", "statusCode");
+            v.filterFields = List.of("direction", "status", "profile", "issueDate");
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+            v.detailHref = "e-invoices/{id}";
+            v.links.add(new HeaderLink("e-Fatura paneli", "e-Invoice overview", "e-invoices", VaadinIcon.INBOX, "einvoice:read"));
+        });
+        configure("e-invoice-events", v -> {
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+    }
+
+    private static void production() {
+        configure("bill-of-materials", v -> {
+            v.columns = List.of("code", "name", "variantId", "quantity", "laborCost", "overheadCost", "isDefault", "isActive");
+            v.filterFields = List.of("isActive", "isDefault");
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+            v.detailHref = "production/boms/{id}";
+        });
+        configure("bom-lines", v -> {
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("work-orders", v -> {
+            v.columns = List.of("number", "variantId", "quantity", "producedQty", "status", "plannedStart", "plannedEnd", "sourceWarehouseId");
+            v.filterFields = List.of("status", "plannedStart", "variantId");
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+            v.detailHref = "production/work-orders/{id}";
+            v.links.add(new HeaderLink("Malzeme ihtiyacı", "Material requirements", "production/requirements", VaadinIcon.STORAGE, "production:read"));
+        });
+        configure("work-order-components", v -> {
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("production-records", v -> {
+            v.columns = List.of("number", "workOrderId", "recordDate", "quantity", "materialCost", "laborCost", "overheadCost", "unitCost");
+            v.filterFields = List.of("workOrderId", "recordDate");
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
     }
 
     private static void ops() {

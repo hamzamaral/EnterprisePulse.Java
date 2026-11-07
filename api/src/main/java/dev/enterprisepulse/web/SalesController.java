@@ -1,6 +1,7 @@
 package dev.enterprisepulse.web;
 
 import dev.enterprisepulse.common.CurrentUser;
+import dev.enterprisepulse.einvoice.EInvoiceService;
 import dev.enterprisepulse.finance.ChequeService;
 import dev.enterprisepulse.finance.FinanceReportService;
 import dev.enterprisepulse.finance.PaymentService;
@@ -36,9 +37,10 @@ public class SalesController {
     private final PaymentService payments;
     private final ChequeService cheques;
     private final FinanceReportService reports;
+    private final EInvoiceService einvoice;
 
     public SalesController(SalesQuoteService quotes, SalesOrderService orders, DeliveryNoteService deliveries, SalesInvoiceService invoices, SalesReturnService returns,
-                            TreasuryService treasury, PaymentService payments, ChequeService cheques, FinanceReportService reports) {
+                            TreasuryService treasury, PaymentService payments, ChequeService cheques, FinanceReportService reports, EInvoiceService einvoice) {
         this.quotes = quotes;
         this.orders = orders;
         this.deliveries = deliveries;
@@ -48,6 +50,7 @@ public class SalesController {
         this.payments = payments;
         this.cheques = cheques;
         this.reports = reports;
+        this.einvoice = einvoice;
     }
 
     private static void require(String code) { CurrentUser.get().require(code); }
@@ -67,7 +70,12 @@ public class SalesController {
     @PostMapping("/api/sales/deliveries") public DeliveryNoteService.Detail deliver(@RequestBody DeliveryNoteService.Create body) { require("sales:deliver"); return deliveries.create(body); }
     @GetMapping("/api/sales/deliveries/{id}") public DeliveryNoteService.Detail delivery(@PathVariable UUID id) { require("sales:read"); return deliveries.get(id); }
 
-    @PostMapping("/api/sales/invoices") public SalesInvoiceService.Detail invoice(@RequestBody SalesInvoiceService.Create body) { require("sales:invoice"); return invoices.create(body); }
+    @PostMapping("/api/sales/invoices") public SalesInvoiceService.Detail invoice(@RequestBody SalesInvoiceService.Create body) {
+        require("sales:invoice");
+        SalesInvoiceService.Detail created = invoices.create(body);
+        einvoice.autoSend(created.id());
+        return created;
+    }
     @GetMapping("/api/sales/invoices/{id}") public SalesInvoiceService.Detail salesInvoice(@PathVariable UUID id) { require("sales:read"); return invoices.get(id); }
     @PostMapping("/api/sales/invoices/{id}/cancel") public SalesInvoiceService.Detail cancelInvoice(@PathVariable UUID id, @RequestBody PurchasingController.CancelBody body) { require("sales:invoice"); return invoices.cancel(id, body.text()); }
 
