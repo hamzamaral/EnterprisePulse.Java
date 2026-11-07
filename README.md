@@ -30,6 +30,10 @@
 | **Stok durumu:** stok değeri, kritik kalemler, depolar | **Kasa ve bankalar:** `KASA-MRK`, `BANK-TRY`, `BANK-EUR` |
 | ![Demirbaşlar](docs/screenshots/assets.png) | ![Muhasebe](docs/screenshots/accounting.png) |
 | **Demirbaşlar:** zimmetli / depoda / hurda kayıtları | **Muhasebe:** bekleyen belgeler, muhasebeleştir |
+| ![Destek kuyruğu](docs/screenshots/support.png) | ![Sözleşmeler](docs/screenshots/contracts.png) |
+| **Destek kuyruğu:** öncelik ve durum etiketleri | **Sözleşmeler:** cari / personel, yürürlükte |
+| ![Satış faturaları](docs/screenshots/sales-invoices.png) | |
+| **Satış faturaları:** cari, vade, kısmi tahsilat | |
 
 ## Hızlı başlangıç
 
