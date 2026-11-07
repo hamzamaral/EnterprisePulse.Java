@@ -197,7 +197,8 @@ public final class Ui {
             Map.entry("LocalShipping", VaadinIcon.TRUCK), Map.entry("PrecisionManufacturing", VaadinIcon.FACTORY), Map.entry("Calculate", VaadinIcon.CALC_BOOK),
             Map.entry("BarChart", VaadinIcon.BAR_CHART), Map.entry("CreditCard", VaadinIcon.CREDIT_CARD), Map.entry("Savings", VaadinIcon.PIGGY_BANK),
             Map.entry("Store", VaadinIcon.SHOP), Map.entry("Business", VaadinIcon.BUILDING), Map.entry("QrCode", VaadinIcon.QRCODE), Map.entry("Laptop", VaadinIcon.LAPTOP),
-            Map.entry("Flight", VaadinIcon.AIRPLANE), Map.entry("Category", VaadinIcon.CUBES), Map.entry("Insights", VaadinIcon.CHART));
+            Map.entry("Flight", VaadinIcon.AIRPLANE), Map.entry("Category", VaadinIcon.CUBES), Map.entry("Insights", VaadinIcon.CHART),
+            Map.entry("Timer", VaadinIcon.TIMER), Map.entry("Description", VaadinIcon.FILE_TEXT), Map.entry("FactCheck", VaadinIcon.CLIPBOARD_CHECK));
 
     public static VaadinIcon icon(String name) {
         return name == null ? VaadinIcon.CHART : ICONS.getOrDefault(name, VaadinIcon.CHART);

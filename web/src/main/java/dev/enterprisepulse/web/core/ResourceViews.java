@@ -127,6 +127,67 @@ public final class ResourceViews {
         sales();
         work();
         people();
+        ops();
+    }
+
+    private static void ops() {
+        configure("tickets", v -> {
+            v.columns = List.of("number", "subject", "priority", "status", "requesterId", "assigneeId", "resolutionDueAt");
+            v.filterFields = List.of("status", "priority", "assigneeId");
+            v.detailHref = "support/tickets/{id}";
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("ticket-categories", v -> {
+            v.columns = List.of("name", "defaultAssigneeId", "isActive", "sortOrder");
+            v.filterFields = List.of("isActive");
+        });
+        configure("contracts", v -> {
+            v.columns = List.of("number", "title", "status", "party", "partnerId", "employeeId", "startDate", "endDate", "amount");
+            v.filterFields = List.of("status", "party", "typeId");
+            v.detailHref = "contracts/{id}";
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("contract-types", v -> {
+            v.columns = List.of("name", "party", "flow", "defaultTermMonths", "defaultNoticeDays", "isActive");
+            v.filterFields = List.of("party", "isActive");
+        });
+        configure("budgets", v -> {
+            v.columns = List.of("year", "name", "status", "departmentId", "ownerId");
+            v.filterFields = List.of("year", "status");
+            v.detailHref = "budgets/{id}";
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("budget-items", v -> {
+            v.columns = List.of("code", "name", "kind", "source", "isActive");
+            v.filterFields = List.of("kind", "source", "isActive");
+        });
+        configure("budget-entries", v -> {
+            v.columns = List.of("itemId", "entryDate", "amount", "description", "departmentId");
+            v.filterFields = List.of("itemId");
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("vehicles", v -> {
+            v.columns = List.of("plate", "brand", "model", "status", "odometer", "fuelType", "ownership");
+            v.filterFields = List.of("status", "fuelType");
+            v.detailHref = "fleet/vehicles/{id}";
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("vehicle-fuel-entries", v -> {
+            v.columns = List.of("vehicleId", "entryDate", "odometer", "liters", "amount", "consumption");
+            v.filterFields = List.of("vehicleId");
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
     }
 
     private static void inventory() {

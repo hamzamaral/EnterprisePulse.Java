@@ -12,7 +12,8 @@ public final class Features {
             "Genel", "İnsan Kaynakları", "Zimmet ve Demirbaş", "Onay Süreçleri", "Organizasyon", "Sistem",
             "Stok ve Depo", "Satın Alma", "Satış", "Cari ve Finans",
             "CRM", "Masraf ve Harcırah", "Proje Yönetimi",
-            "Bordro", "İşe Alım", "Performans ve Eğitim");
+            "Bordro", "İşe Alım", "Performans ve Eğitim",
+            "Destek", "Sözleşmeler", "Bütçe", "Araç ve Filo");
 
     private static final Set<String> LATER = Set.of();
 
@@ -21,7 +22,8 @@ public final class Features {
             "hr/my-leave", "hr/my-attendance", "hr/org-chart", "hr/timesheet",
             "assets/my", "inventory", "finance/aging",
             "expenses/my", "projects/my-tasks", "projects/timesheet",
-            "payroll/my", "recruitment/interviews", "performance/my", "training/my", "training/compliance");
+            "payroll/my", "recruitment/interviews", "performance/my", "training/my", "training/compliance",
+            "support/my", "fleet/my");
 
     public static boolean enabled(NavGroup g) {
         return GROUPS.contains(g.label().tr());
