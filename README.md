@@ -130,6 +130,15 @@ pom.xml                    # Maven parent
 node tools/codegen/emit-java.mjs
 ```
 
+## Belgeler (PDF benzeri kılavuzlar)
+
+Yazıcıdan veya tarayıcıda **PDF olarak yazdır** ile PDF üretebilirsiniz.
+
+| Belge | İçerik |
+| --- | --- |
+| [Kullanıcı / ekran kılavuzu](docs/kullanici-kilavuzu.md) ([HTML → PDF](docs/kullanici-kilavuzu.html)) | Tüm menü sayfaları modül gruplarıyla (ör. 2. İK → 2.1 İzinlerim), ne işe yarar, nasıl kullanılır |
+| [Teknik kılavuz](docs/teknik-kilavuz.md) ([HTML → PDF](docs/teknik-kilavuz.html)) | Backend/frontend stack, paket yapısı, platform kalıpları, her modülün servis / API / Vaadin / seed / iş kuralları |
+
 ## Kardeş projeler
 
 Aynı domain modeli üç stack’te:
