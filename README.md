@@ -1,26 +1,110 @@
 # EnterprisePulse Java
 
-EnterprisePulse ERP'nin Spring Boot 3.5 API + Vaadin 24 web ile yeniden yazımı (Java 17).
+![Java](https://img.shields.io/badge/Java-17-ED8B00?logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5-6DB33F?logo=springboot&logoColor=white)
+![Vaadin](https://img.shields.io/badge/Vaadin-24-00B4F0?logo=vaadin&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
+![Flyway](https://img.shields.io/badge/Flyway-Migrations-CC0200)
+![Maven](https://img.shields.io/badge/Maven-Multi--module-C71A36?logo=apachemaven&logoColor=white)
 
-## Çalıştırma
+**EnterprisePulse**, çok şirketli (multi-tenant) kurumsal bir ERP sistemidir. Bu repo, NestJS / React orijinalinin **Spring Boot 3.5 + Vaadin 24** ile yeniden yazımıdır (Java 17): API ve web ayrı Maven modülleri.
+
+| Repo | İçerik |
+| --- | --- |
+| **EnterprisePulse.Java** (bu repo) | Spring Boot API + Vaadin arayüz |
+| [EnterprisePulse.NET](https://github.com/hamzamaral/EnterprisePulse.NET) | ASP.NET Core + Blazor yeniden yazımı |
+| [EnterprisePulse](https://github.com/hamzamaral/EnterprisePulse) | NestJS / React orijinali, yol haritası, ADR |
+
+![Gösterge paneli](docs/screenshots/dashboard.png)
+
+## Ekranlar
+
+| | |
+| --- | --- |
+| ![Gösterge paneli](docs/screenshots/dashboard.png) | ![İzinlerim](docs/screenshots/my-leave.png) |
+| **Gösterge paneli:** yetkiye göre KPI kartları (onay, bildirim, İK, demirbaş) | **İzinlerim:** yıllık / mazeret bakiyesi, yeni talep, kendi personel kaydı |
+| ![Muhasebe](docs/screenshots/accounting.png) | |
+| **Muhasebe:** bekleyen belgeler, tek tıkla muhasebeleştirme, mizan / bilanço / gelir tablosu | |
+
+## Hızlı başlangıç
+
+Gereksinimler: JDK 17+, Maven Wrapper (dahil), Docker.
 
 ```bash
-docker compose up -d                 # Postgres 5452, RustFS 9020/9021, Mailpit 1045/8045
-./mvnw -pl api spring-boot:run       # http://localhost:8180 (Swagger: /swagger-ui.html)
-./mvnw -pl web spring-boot:run       # http://localhost:8181
+docker compose up -d
+# Postgres 5452 · RustFS 9020/9021 · Mailpit 1045/8045
+
+./mvnw -pl api spring-boot:run
+# http://localhost:8180  ·  Swagger: /swagger-ui.html
+
+./mvnw -pl web spring-boot:run
+# http://localhost:8181
 ```
 
-API açılışta Flyway migration'larını uygular ve demo verisini yükler.
+API açılışta Flyway migration’larını uygular ve demo verisini yükler.
 
-| Kullanıcı | Şifre |
+### Demo kullanıcılar
+
+| Rol | E-posta | Şifre |
+| --- | --- | --- |
+| Sistem yöneticisi | `admin@enterprisepulse.dev` | `Admin123!` |
+| Müdür | `manager@enterprisepulse.dev` | `Manager123!` |
+| Personel | `employee@enterprisepulse.dev` | `Employee123!` |
+
+### Yerel servisler
+
+| Servis | Adres |
 | --- | --- |
-| admin@enterprisepulse.dev | Admin123! |
-| manager@enterprisepulse.dev | Manager123! |
-| employee@enterprisepulse.dev | Employee123! |
+| API | http://localhost:8180 |
+| Swagger | http://localhost:8180/swagger-ui.html |
+| Web (Vaadin) | http://localhost:8181 |
+| Mailpit | http://localhost:8045 |
+| RustFS (S3) | http://localhost:9021 |
+
+### Testler
+
+```bash
+./mvnw -pl api test
+# Birim + API testleri; her koşu Postgres 5452 üzerinde geçici bir veritabanı açar
+```
+
+## Özellikler
+
+- **Platform:** JWT giriş, şirket / şube değiştirme, kullanıcı · rol · izin, denetim kaydı, STOMP bildirimleri, onay kutusu, ayarlar. Periyodik işler `@Scheduled` + ShedLock ile (Redis / BullMQ yok).
+- **Gösterge paneli:** yetkiye göre İK, zimmet, stok ve finans KPI’ları; personel için kalan izin ve self-servis özetleri.
+- **İnsan Kaynakları:** personel, departman, pozisyon, organizasyon şeması, izin talebi ve çok adımlı onay, **İzinlerim** / **Mesaim**, puantaj, vardiya planı.
+- **Zimmet ve Demirbaş:** demirbaş kartı, QR etiket, zimmet / iade / devir, amortisman, sayım, **Zimmetlerim**.
+- **Stok ve Depo:** stok durumu, ürün / varyant, lot · seri, giriş / çıkış / transfer / düzeltme, sayım.
+- **Satın Alma / Satış / Finans:** teklif, sipariş, irsaliye, fatura; cari hesaplar; kasa / banka, çek · senet, ödeme / tahsilat, yaşlandırma.
+- **CRM:** potansiyel müşteri, fırsat hattı, aktiviteler.
+- **Masraf ve Harcırah:** self-servis formlar, onay, finans ödemesi.
+- **Proje Yönetimi:** proje, ekip, görev panosu, zaman çizelgesi.
+- **Bordro / İşe Alım / Performans / Eğitim:** dönem hesaplama, ücret pusulası; iş ilanı ve başvuru hattı; değerlendirme dönemi; eğitim oturumları ve uyum.
+- **Destek / Sözleşme / Bütçe / Filo:** SLA’lı ticket kuyruğu, sözleşme takvimi, departman bütçesi, araç · yakıt · belge uyarıları.
+- **Muhasebe / e-Fatura / Üretim:** tekdüzen hesap planı, yevmiye, mizan · bilanço · gelir tablosu; UBL-TR kuyruk simülasyonu; ürün ağacı, iş emri, MRP.
 
 ## Yapı
 
-- `api`: JPA varlıkları (üretilmiş), kimlik, yetki, çok şirketlilik, iş akışı, dosya, bildirim (STOMP), genel CRUD, modül servisleri
-- `web`: Vaadin arayüzü; metadata'dan üretilen liste/form/detay ekranları ve modül sayfaları
-- `tools/codegen`: Prisma şemasından varlık, enum ve `metadata.json` üretimi (`node tools/codegen/emit-java.mjs`)
-- Testler: `./mvnw -pl api test` (Postgres 5452 gerekir; her koşu geçici bir veritabanı açar)
+```
+pom.xml                    # Maven parent
+├── api/                   # Spring Boot: JPA, güvenlik, Flyway, STOMP, modül servisleri
+├── web/                   # Vaadin 24: metadata’dan liste / form / detay + modül sayfaları
+├── tools/codegen          # Prisma şemasından Java varlık + metadata üretimi
+└── docker-compose.yml
+```
+
+Kod üretimi:
+
+```bash
+node tools/codegen/emit-java.mjs
+```
+
+## Kardeş projeler
+
+Aynı domain modeli üç stack’te:
+
+| Proje | API | UI | İş kuyruğu | Portlar |
+| --- | --- | --- | --- | --- |
+| [EnterprisePulse](https://github.com/hamzamaral/EnterprisePulse) | NestJS | React | Redis + BullMQ | 3000 / 5173 |
+| [EnterprisePulse.NET](https://github.com/hamzamaral/EnterprisePulse.NET) | ASP.NET 10 | Blazor | Hangfire + Postgres | 5100 / 5101 |
+| **EnterprisePulse.Java** | Spring Boot 3.5 | Vaadin 24 | `@Scheduled` + ShedLock | 8180 / 8181 |
