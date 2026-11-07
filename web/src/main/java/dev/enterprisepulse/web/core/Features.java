@@ -9,18 +9,23 @@ public final class Features {
     private Features() {}
 
     public static final Set<String> GROUPS = Set.of(
-            "Genel", "İnsan Kaynakları", "Zimmet ve Demirbaş", "Onay Süreçleri", "Organizasyon", "Sistem");
+            "Genel", "İnsan Kaynakları", "Zimmet ve Demirbaş", "Onay Süreçleri", "Organizasyon", "Sistem",
+            "Stok ve Depo", "Satın Alma", "Cari ve Finans");
+
+    /** Treasury, payments and cheques arrive with finance. */
+    private static final Set<String> LATER = Set.of("treasury-accounts", "partner-payments", "cheques");
 
     public static final Set<String> PAGES = Set.of(
             "", "workflow/inbox", "roles", "settings",
             "hr/my-leave", "hr/my-attendance", "hr/org-chart", "hr/timesheet",
-            "assets/my");
+            "assets/my", "inventory");
 
     public static boolean enabled(NavGroup g) {
         return GROUPS.contains(g.label().tr());
     }
 
     public static boolean enabled(NavItem i) {
-        return i.resource() != null || PAGES.contains(i.page() == null ? "" : i.page());
+        if (i.resource() != null) return !LATER.contains(i.resource());
+        return PAGES.contains(i.page() == null ? "" : i.page());
     }
 }

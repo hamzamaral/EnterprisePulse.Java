@@ -7,6 +7,10 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import dev.enterprisepulse.web.core.Meta.ResourceMeta;
 import dev.enterprisepulse.web.views.assets.AssetDialogs;
 import dev.enterprisepulse.web.views.assets.AssetTabs;
+import dev.enterprisepulse.web.views.inventory.InventoryTabs;
+import dev.enterprisepulse.web.views.inventory.StockCountView;
+import dev.enterprisepulse.web.views.purchasing.PurchasingTabs;
+import dev.enterprisepulse.web.views.purchasing.QuoteFormView;
 import dev.enterprisepulse.web.views.hr.LeaveRequestDialog;
 import dev.enterprisepulse.web.views.hr.TerminateDialog;
 import dev.enterprisepulse.web.views.platform.CompanyCreateDialog;
@@ -119,6 +123,96 @@ public final class ResourceViews {
         platform();
         hr();
         assets();
+        inventory();
+    }
+
+    private static void inventory() {
+        configure("products", v -> {
+            v.columns = List.of("code", "name", "categoryId", "unitId", "type", "trackingType", "salePrice", "isActive");
+            v.filterFields = List.of("type", "trackingType", "categoryId", "isActive");
+            v.links.add(new HeaderLink("Stok durumu", "Stock levels", "inventory", VaadinIcon.STORAGE));
+            v.tabs.add(new Tab("Varyantlar", "Variants", null, InventoryTabs::variants));
+            v.tabs.add(new Tab("Stok", "Stock", null, InventoryTabs::stock));
+            v.tabs.add(new Tab("Stok kartı", "Stock card", null, InventoryTabs::ledger));
+        });
+        configure("product-categories", v -> {
+            v.columns = List.of("code", "name", "parentId", "isActive");
+            v.links.add(new HeaderLink("Depolar", "Warehouses", "r/warehouses", VaadinIcon.STORAGE));
+        });
+        configure("warehouses", v -> {
+            v.columns = List.of("code", "name", "branchId", "address", "isActive");
+            v.links.add(new HeaderLink("Kategoriler", "Categories", "r/product-categories", VaadinIcon.CUBES));
+            v.tabs.add(new Tab("Stok değeri", "Stock value", null, InventoryTabs::warehouse));
+        });
+        configure("stock-movements", v -> {
+            v.columns = List.of("number", "type", "movementDate", "sourceWarehouseId", "targetWarehouseId", "reference", "createdAt");
+            v.filterFields = List.of("type", "movementDate", "sourceWarehouseId", "targetWarehouseId");
+            v.createHref = "inventory/movements/new";
+            v.detailHref = "inventory/movements/{id}";
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("stock-counts", v -> {
+            v.columns = List.of("number", "warehouseId", "countDate", "status", "createdById", "completedAt");
+            v.filterFields = List.of("status", "warehouseId", "countDate");
+            v.createDialog = StockCountView::open;
+            v.detailHref = "inventory/counts/{id}";
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("business-partners", v -> {
+            v.columns = List.of("code", "title", "type", "city", "phone", "paymentTermDays", "currencyCode", "isActive");
+            v.filterFields = List.of("type", "city", "isActive");
+            v.tabs.add(new Tab("Ekstre", "Statement", null, PurchasingTabs::statement));
+        });
+        configure("purchase-requests", v -> {
+            v.columns = List.of("number", "title", "requestDate", "neededBy", "status", "requestedById");
+            v.filterFields = List.of("status", "requestDate", "departmentId");
+            v.createHref = "purchasing/requests/new";
+            v.hideEdit = true;
+            v.hideDelete = true;
+            v.hiddenChildren = Set.of("purchase-request-lines");
+            v.workflowEntity = "PurchaseRequest";
+            v.tabs.add(new Tab("Satırlar", "Lines", null, PurchasingTabs::requestLines));
+            v.tabs.add(new Tab("Teklif karşılaştırma", "Compare quotes", "purchasing:read", PurchasingTabs::compare));
+        });
+        configure("supplier-quotes", v -> {
+            v.columns = List.of("number", "partnerId", "requestId", "quoteDate", "validUntil", "currencyCode", "grandTotal", "status");
+            v.filterFields = List.of("status", "partnerId", "quoteDate");
+            v.createHref = "purchasing/quotes/new";
+            v.hideEdit = true;
+            v.hideDelete = true;
+            v.hiddenChildren = Set.of("supplier-quote-lines");
+            v.tabs.add(new Tab("Satırlar", "Lines", null, PurchasingTabs::quoteLines));
+            v.actions.add(new Action("Kabul et", "Accept").icon(VaadinIcon.CHECK).permission("purchasing:create")
+                    .visible(Action.statusIn("OPEN")).run(QuoteFormView.accept()));
+            v.actions.add(new Action("Reddet", "Reject").icon(VaadinIcon.CLOSE).theme("error").permission("purchasing:update")
+                    .visible(Action.statusIn("OPEN")).endpoint("/api/purchasing/quotes/{id}/reject").confirm("Teklif reddedilecek."));
+        });
+        configure("purchase-orders", v -> {
+            v.columns = List.of("number", "partnerId", "orderDate", "expectedDate", "warehouseId", "currencyCode", "grandTotal", "status");
+            v.filterFields = List.of("status", "partnerId", "warehouseId", "orderDate");
+            v.createHref = "purchasing/orders/new";
+            v.detailHref = "purchasing/orders/{id}";
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("goods-receipts", v -> {
+            v.columns = List.of("number", "orderId", "partnerId", "warehouseId", "receiptDate", "deliveryNoteNo");
+            v.filterFields = List.of("partnerId", "warehouseId", "receiptDate");
+            v.createHref = "purchasing/receipts/new";
+            v.detailHref = "purchasing/receipts/{id}";
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("purchase-invoices", v -> {
+            v.columns = List.of("number", "supplierInvoiceNo", "partnerId", "invoiceDate", "dueDate", "grandTotal", "paymentStatus", "status");
+            v.filterFields = List.of("status", "paymentStatus", "partnerId", "invoiceDate");
+            v.createHref = "purchasing/invoices/new";
+            v.detailHref = "purchasing/invoices/{id}";
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
     }
 
     private static void assets() {

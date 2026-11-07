@@ -8755,8 +8755,8 @@
      "kind": "enum",
      "required": false,
      "label": {
-      "tr": "İzin türü",
-      "en": "Leave type"
+      "tr": "Ürün türü",
+      "en": "Product type"
      },
      "enum": "ProductType",
      "values": [

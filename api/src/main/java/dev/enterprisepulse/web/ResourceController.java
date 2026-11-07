@@ -42,6 +42,12 @@ public class ResourceController {
     }
 
     private void require(String resource, String action) {
+        if ("purchase-requests".equals(resource) && "read".equals(action)) {
+            if (!CurrentUser.get().hasAny("purchasing:read", "purchasing:create", "workflow:start")) {
+                throw dev.enterprisepulse.common.AppException.forbidden("Missing permission: purchasing:read");
+            }
+            return;
+        }
         CurrentUser.get().require(meta.get(resource).permissionFor(action, meta.registry()));
     }
 
