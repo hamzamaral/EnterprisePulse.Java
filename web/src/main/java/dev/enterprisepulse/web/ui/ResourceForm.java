@@ -15,8 +15,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
-/** Metadata-driven form: editable inputs or read-only values for every visible field. */
-public class ResourceForm extends FormLayout {
+/** Metadata-driven form: editable inputs or a definition-list for read-only detail views. */
+public class ResourceForm extends Div {
     private final ResourceMeta resource;
     private final boolean isNew;
     private final boolean readOnly;
@@ -26,12 +26,29 @@ public class ResourceForm extends FormLayout {
         this.resource = resource;
         this.isNew = isNew;
         this.readOnly = readOnly;
-        if (columns >= 4) {
-            setResponsiveSteps(new ResponsiveStep("0", 1), new ResponsiveStep("600px", 2), new ResponsiveStep("1000px", 4));
-        } else {
-            setResponsiveSteps(new ResponsiveStep("0", 1), new ResponsiveStep("500px", columns));
-        }
+        setWidthFull();
         ResourceViews.View view = ResourceViews.of(resource.resource());
+        if (readOnly) {
+            Div dl = new Div();
+            dl.addClassName("ep-dl");
+            for (FieldMeta f : resource.fields()) {
+                if (f.hidden() || view.hiddenFields.contains(f.name()) || fixedFields.contains(f.name())) continue;
+                boolean visible = showSystem && !isNew ? !f.name().equals("companyId") && !f.name().equals("deletedAt") : !f.isSystem();
+                if (!visible) continue;
+                Div item = displayItem(f, data.get(f.name()), labels);
+                if (f.kind().equals("text") || f.kind().equals("json")) item.addClassName("ep-dl-wide");
+                dl.add(item);
+            }
+            add(dl);
+            return;
+        }
+        FormLayout form = new FormLayout();
+        form.setWidthFull();
+        if (columns >= 4) {
+            form.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1), new FormLayout.ResponsiveStep("600px", 2), new FormLayout.ResponsiveStep("1000px", 4));
+        } else {
+            form.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1), new FormLayout.ResponsiveStep("500px", columns));
+        }
         for (FieldMeta f : resource.fields()) {
             if (f.hidden() || view.hiddenFields.contains(f.name()) || fixedFields.contains(f.name())) continue;
             boolean visible = showSystem && !isNew ? !f.name().equals("companyId") && !f.name().equals("deletedAt") : !f.isSystem();
@@ -40,9 +57,10 @@ public class ResourceForm extends FormLayout {
             if (isNew && !editable) continue;
             if (isNew && f == resource.sequenceField()) continue;
             Component c = editable ? FieldInput.create(f, data, labels, false, onChange) : display(f, data.get(f.name()), labels);
-            add(c);
-            if (f.kind().equals("text") || f.kind().equals("json")) setColspan(c, columns >= 4 ? 4 : columns);
+            form.add(c);
+            if (f.kind().equals("text") || f.kind().equals("json")) form.setColspan(c, columns >= 4 ? 4 : columns);
         }
+        add(form);
     }
 
     private boolean editable(FieldMeta f, ResourceViews.View view) {
@@ -55,14 +73,20 @@ public class ResourceForm extends FormLayout {
     }
 
     private static Component display(FieldMeta f, JsonNode value, Map<String, Map<String, String>> labels) {
+        return displayItem(f, value, labels);
+    }
+
+    private static Div displayItem(FieldMeta f, JsonNode value, Map<String, Map<String, String>> labels) {
         Div box = new Div();
-        box.addClassName("ep-field");
+        box.addClassName("ep-dl-item");
         Span caption = new Span(Ui.T(f.label()));
-        caption.addClassName("ep-field-label");
+        caption.addClassName("ep-dl-label");
         box.add(caption);
         String raw = Fmt.raw(value);
         if (f.kind().equals("enum") && raw != null) {
-            box.add(new Div(Ui.badge(Fmt.value(f, value, Ui.meta(), Ui.locale(), labels), Fmt.statusColor(raw))));
+            Div v = new Div(Ui.badge(Fmt.value(f, value, Ui.meta(), Ui.locale(), labels), Fmt.statusColor(raw)));
+            v.addClassName("ep-dl-value");
+            box.add(v);
         } else if (f.kind().equals("json") && raw != null) {
             Pre pre = new Pre(value.toPrettyString());
             pre.addClassName("ep-json");
@@ -70,7 +94,7 @@ public class ResourceForm extends FormLayout {
         } else {
             String text = Fmt.value(f, value, Ui.meta(), Ui.locale(), labels);
             Div v = new Div(new Span(text.isEmpty() ? "—" : text));
-            v.addClassName("ep-field-value");
+            v.addClassName("ep-dl-value");
             box.add(v);
         }
         return box;

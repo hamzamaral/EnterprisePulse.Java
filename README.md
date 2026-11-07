@@ -81,7 +81,8 @@ Son koşuda: **54/54** geçti.
 
 ## Özellikler
 
-- **Platform:** JWT giriş, şirket / şube değiştirme, kullanıcı · rol · izin, denetim kaydı, STOMP bildirimleri, onay kutusu, ayarlar. Periyodik işler **`@Scheduled` + ShedLock** (Redis / BullMQ yok).
+- **Platform:** JWT giriş, şirket / şube değiştirme, kullanıcı · rol · izin, denetim kaydı, STOMP bildirimleri, onay kutusu, ayarlar. Periyodik işler **`@Scheduled` + ShedLock** (Redis / BullMQ yok). Kayıt detayında 3 sütunlu tanım listesi, durum/koşul rozetleri ve sekme kabuğu.
+
 - **Gösterge paneli:** yetkiye göre İK, zimmet, stok ve finans KPI’ları; personel için kalan izin ve self-servis özetleri.
 - **İnsan Kaynakları:** personel, departman, pozisyon, organizasyon şeması, izin talebi ve çok adımlı onay, **İzinlerim** / **Mesaim**, puantaj, vardiya planı.
 - **Zimmet ve Demirbaş:** demirbaş kartı, QR etiket, zimmet / iade / devir, amortisman, sayım, **Zimmetlerim**.

@@ -6,6 +6,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -123,7 +124,9 @@ public class ResourceDetailView extends Div implements BeforeEnterObserver, HasD
         heading = computeHeading();
         UI.getCurrent().getPage().setTitle(getPageTitle());
 
-        Div titleBox = new Div(Ui.muted(Ui.T(meta.label())));
+        Span crumb = Ui.muted(Ui.T(meta.label()));
+        crumb.addClassName("ep-breadcrumb");
+        Div titleBox = new Div(crumb);
         Div titleRow = new Div(Ui.title(heading));
         titleRow.addClassName("ep-row");
         FieldMeta statusField = meta.field("status");
@@ -131,18 +134,25 @@ public class ResourceDetailView extends Div implements BeforeEnterObserver, HasD
         if (status != null && statusField != null && statusField.kind().equals("enum")) {
             titleRow.add(Ui.badge(Meta.get().enumLabel(statusField.enumName(), status, Ui.locale()), Fmt.statusColor(status)));
         }
+        FieldMeta conditionField = meta.field("condition");
+        String condition = Fmt.raw(record.get("condition"));
+        if (condition != null && conditionField != null && conditionField.kind().equals("enum")) {
+            titleRow.add(Ui.badge(Meta.get().enumLabel(conditionField.enumName(), condition, Ui.locale()), Fmt.statusColor(condition)));
+        }
         titleBox.add(titleRow);
         titleBox.addClassName("ep-grow");
         Div header = Ui.pageHeader(Ui.iconButton(VaadinIcon.ARROW_LEFT, Ui.L("back"), this::back), titleBox);
-        header.addClassName("ep-no-print");
+        header.addClassNames("ep-no-print", "ep-detail-header");
         if (!isNew()) {
+            Div actions = new Div();
+            actions.addClassName("ep-detail-actions");
             for (Action a : view.actions) {
                 if (!a.visible.test(record) || (a.permission != null && !Session.current().has(a.permission))) continue;
                 Button b = new Button(a.text(Ui.locale()), a.icon.create(), e -> ActionRunner.run(a, new ActionContext(record, this::reload)));
                 b.addThemeVariants(ButtonVariant.LUMO_SMALL);
                 if ("error".equals(a.theme)) b.addThemeVariants(ButtonVariant.LUMO_ERROR);
                 if ("success".equals(a.theme)) b.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
-                header.add(b);
+                actions.add(b);
             }
             if (canEdit() && !editing) {
                 Button edit = new Button(Ui.L("edit"), VaadinIcon.EDIT.create(), e -> {
@@ -150,15 +160,16 @@ public class ResourceDetailView extends Div implements BeforeEnterObserver, HasD
                     selectedTab = 0;
                     render();
                 });
-                edit.addThemeVariants(ButtonVariant.LUMO_SMALL);
-                header.add(edit);
+                edit.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_PRIMARY);
+                actions.add(edit);
             }
             if (canDelete()) {
                 Button delete = new Button(VaadinIcon.TRASH.create(), e -> delete());
                 delete.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
                 delete.setTooltipText(Ui.L("delete"));
-                header.add(delete);
+                actions.add(delete);
             }
+            header.add(actions);
         }
         add(header);
         if (!isNew() && meta.draftLocked() && !isDraft()) {
@@ -167,16 +178,17 @@ public class ResourceDetailView extends Div implements BeforeEnterObserver, HasD
         }
 
         TabSheet tabs = new TabSheet();
-        tabs.addClassName("ep-tabs");
+        tabs.addClassNames("ep-tabs", "ep-detail-tabs");
         tabs.setWidthFull();
         Div details = new Div(new ResourceForm(meta, record, labels, isNew(), !isNew() && !editing, !isNew() && !editing, fixed.keySet(), 4, null));
+        details.addClassName("ep-detail-panel");
         if (isNew() || editing) {
             Button cancel = new Button(Ui.L("cancel"), e -> cancelEdit());
             Button save = new Button(Ui.L("save"), VaadinIcon.CHECK.create());
             save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             save.addClickListener(e -> save(save));
             Div buttons = new Div(cancel, save);
-            buttons.addClassName("ep-row-end");
+            buttons.addClassNames("ep-row-end", "ep-detail-footer");
             details.add(buttons);
         }
         tabs.add(Ui.L("details"), details);
