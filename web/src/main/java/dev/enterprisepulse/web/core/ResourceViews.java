@@ -124,6 +124,7 @@ public final class ResourceViews {
         hr();
         assets();
         inventory();
+        sales();
     }
 
     private static void inventory() {
@@ -210,6 +211,68 @@ public final class ResourceViews {
             v.filterFields = List.of("status", "paymentStatus", "partnerId", "invoiceDate");
             v.createHref = "purchasing/invoices/new";
             v.detailHref = "purchasing/invoices/{id}";
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+    }
+
+    private static void sales() {
+        configure("sales-quotes", v -> {
+            v.columns = List.of("number", "partnerId", "quoteDate", "validUntil", "currencyCode", "grandTotal", "status");
+            v.filterFields = List.of("status", "partnerId", "quoteDate");
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+            v.hiddenChildren = Set.of("sales-quote-lines");
+        });
+        configure("sales-orders", v -> {
+            v.columns = List.of("number", "partnerId", "orderDate", "deliveryDate", "warehouseId", "currencyCode", "grandTotal", "status");
+            v.filterFields = List.of("status", "partnerId", "warehouseId", "orderDate");
+            v.detailHref = "sales/orders/{id}";
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("delivery-notes", v -> {
+            v.columns = List.of("number", "orderId", "partnerId", "warehouseId", "deliveryDate", "carrier");
+            v.filterFields = List.of("partnerId", "warehouseId", "deliveryDate");
+            v.detailHref = "sales/deliveries/{id}";
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("sales-invoices", v -> {
+            v.columns = List.of("number", "partnerId", "invoiceDate", "dueDate", "grandTotal", "paidAmount", "paymentStatus", "status");
+            v.filterFields = List.of("status", "paymentStatus", "partnerId", "invoiceDate");
+            v.detailHref = "sales/invoices/{id}";
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("sales-returns", v -> {
+            v.columns = List.of("number", "invoiceId", "partnerId", "returnDate", "grandTotal", "reason");
+            v.detailHref = "sales/returns/{id}";
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("treasury-accounts", v -> {
+            v.columns = List.of("code", "name", "type", "currencyCode", "bankName", "iban", "isActive");
+            v.filterFields = List.of("type", "currencyCode", "isActive");
+        });
+        configure("partner-payments", v -> {
+            v.columns = List.of("number", "direction", "method", "partnerId", "paymentDate", "amount", "currencyCode", "status");
+            v.filterFields = List.of("direction", "method", "status", "partnerId", "paymentDate");
+            v.detailHref = "finance/payments/{id}";
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("cheques", v -> {
+            v.columns = List.of("number", "kind", "direction", "status", "serialNo", "partnerId", "dueDate", "amount", "currencyCode");
+            v.filterFields = List.of("kind", "direction", "status", "partnerId", "dueDate");
+            v.detailHref = "finance/cheques/{id}";
+            v.hideCreate = true;
             v.hideEdit = true;
             v.hideDelete = true;
         });
