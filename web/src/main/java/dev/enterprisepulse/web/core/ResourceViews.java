@@ -126,6 +126,7 @@ public final class ResourceViews {
         inventory();
         sales();
         work();
+        people();
     }
 
     private static void inventory() {
@@ -431,6 +432,66 @@ public final class ResourceViews {
             v.columns = List.of("number", "name", "partnerId", "managerId", "status", "startDate", "dueDate", "budgetAmount", "expenseCost");
             v.filterFields = List.of("status", "managerId", "partnerId");
             v.detailHref = "projects/{id}";
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+    }
+
+    private static void people() {
+        configure("payroll-periods", v -> {
+            v.columns = List.of("number", "year", "month", "status", "employeeCount", "grossTotal", "netTotal", "employerCostTotal");
+            v.filterFields = List.of("status", "year");
+            v.detailHref = "payroll/periods/{id}";
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("salary-records", v -> {
+            v.columns = List.of("employeeId", "effectiveFrom", "grossSalary", "note");
+            v.filterFields = List.of("employeeId");
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("job-postings", v -> {
+            v.columns = List.of("number", "title", "status", "openings", "location", "salaryMin", "salaryMax");
+            v.filterFields = List.of("status");
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("job-applications", v -> {
+            v.columns = List.of("postingId", "candidateId", "stage", "appliedAt", "hiredAt");
+            v.filterFields = List.of("stage", "postingId");
+            v.detailHref = "recruitment/applications/{id}";
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("candidates", v -> {
+            v.columns = List.of("firstName", "lastName", "email", "city", "source", "expectedSalary");
+            v.filterFields = List.of("source");
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("review-cycles", v -> {
+            v.columns = List.of("name", "status", "periodStart", "periodEnd", "goalWeight");
+            v.filterFields = List.of("status");
+            v.hideCreate = true;
+            v.hideEdit = true;
+            v.hideDelete = true;
+        });
+        configure("competencies", v -> {
+            v.columns = List.of("name", "sortOrder", "isActive");
+            v.filterFields = List.of("isActive");
+        });
+        configure("training-courses", v -> {
+            v.columns = List.of("code", "title", "category", "format", "durationHours", "isMandatory", "validityMonths", "isActive");
+            v.filterFields = List.of("category", "isMandatory", "isActive");
+        });
+        configure("training-sessions", v -> {
+            v.columns = List.of("courseId", "startsAt", "status", "location", "instructor", "capacity");
+            v.filterFields = List.of("status", "courseId");
             v.hideCreate = true;
             v.hideEdit = true;
             v.hideDelete = true;

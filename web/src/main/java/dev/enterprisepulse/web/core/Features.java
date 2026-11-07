@@ -11,7 +11,8 @@ public final class Features {
     public static final Set<String> GROUPS = Set.of(
             "Genel", "İnsan Kaynakları", "Zimmet ve Demirbaş", "Onay Süreçleri", "Organizasyon", "Sistem",
             "Stok ve Depo", "Satın Alma", "Satış", "Cari ve Finans",
-            "CRM", "Masraf ve Harcırah", "Proje Yönetimi");
+            "CRM", "Masraf ve Harcırah", "Proje Yönetimi",
+            "Bordro", "İşe Alım", "Performans ve Eğitim");
 
     private static final Set<String> LATER = Set.of();
 
@@ -19,7 +20,8 @@ public final class Features {
             "", "workflow/inbox", "roles", "settings",
             "hr/my-leave", "hr/my-attendance", "hr/org-chart", "hr/timesheet",
             "assets/my", "inventory", "finance/aging",
-            "expenses/my", "projects/my-tasks", "projects/timesheet");
+            "expenses/my", "projects/my-tasks", "projects/timesheet",
+            "payroll/my", "recruitment/interviews", "performance/my", "training/my", "training/compliance");
 
     public static boolean enabled(NavGroup g) {
         return GROUPS.contains(g.label().tr());
