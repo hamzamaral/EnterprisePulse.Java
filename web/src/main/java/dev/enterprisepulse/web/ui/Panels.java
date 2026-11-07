@@ -12,9 +12,12 @@ import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.server.streams.UploadHandler;
 import dev.enterprisepulse.web.core.ApiClient;
 import dev.enterprisepulse.web.core.Fmt;
+import dev.enterprisepulse.web.core.Meta;
+import dev.enterprisepulse.web.core.Texts;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 /** Record side panels: approval flow, attached files and audit history. */
 public final class Panels {
@@ -101,6 +104,7 @@ public final class Panels {
     public static class HistoryPanel extends Div {
         public HistoryPanel(String entityType, String entityId) {
             addClassName("ep-simple-table");
+            Meta.ResourceMeta resource = Ui.meta() == null ? null : Ui.meta().byModel(entityType);
             List<ObjectNode> rows = new java.util.ArrayList<>();
             Ui.run(() -> rows.addAll(Ui.rows(Ui.api().get("/api/r/audit-logs?entityType=" + entityType + "&entityId=" + entityId
                     + "&sort=createdAt&order=desc&pageSize=100").get("data"))));
@@ -110,23 +114,88 @@ public final class Panels {
             add(head);
             for (ObjectNode row : rows) {
                 Div changes = new Div();
-                JsonNode newValues = row.get("newValues");
-                JsonNode oldValues = row.get("oldValues");
-                if (newValues != null && newValues.isObject()) {
-                    newValues.fields().forEachRemaining(e -> {
-                        JsonNode old = oldValues == null ? null : oldValues.get(e.getKey());
-                        Div line = new Div(new Span(e.getKey() + ": " + (old == null ? "∅" : old.toString()) + " → "
-                                + (e.getValue() == null || e.getValue().isNull() ? "∅" : e.getValue().toString())));
-                        line.addClassName("ep-mono");
-                        changes.add(line);
-                    });
+                for (String[] line : changeLines(resource, row)) {
+                    Span bold = new Span(line[0]);
+                    bold.getStyle().set("font-weight", "600");
+                    Div item = new Div(bold, new Span(": " + line[1] + " → " + line[2]));
+                    changes.add(item);
                 }
-                Div r = new Div(new Span(Fmt.dateTime(row.get("createdAt"))), new Span(row.path("userEmail").asText("")),
-                        Ui.badge(row.path("action").asText(), "contrast"), changes);
+                String email = row.path("userEmail").asText("");
+                Div r = new Div(new Span(Fmt.dateTime(row.get("createdAt"))), new Span(email.isBlank() ? "—" : email),
+                        Ui.badge(actionLabel(row.path("action").asText()), "contrast"), changes);
                 r.addClassName("ep-simple-row");
                 add(r);
             }
             if (rows.isEmpty()) add(Ui.muted(Ui.L("noRecords")));
+        }
+
+        private static String actionLabel(String action) {
+            return switch (action == null ? "" : action) {
+                case "create" -> Ui.T("Oluşturuldu", "Created");
+                case "update" -> Ui.T("Güncellendi", "Updated");
+                case "delete" -> Ui.T("Silindi", "Deleted");
+                default -> action == null || action.isBlank() ? "—" : action;
+            };
+        }
+
+        private static List<String[]> changeLines(Meta.ResourceMeta resource, ObjectNode row) {
+            List<String[]> lines = new java.util.ArrayList<>();
+            JsonNode newValues = row.get("newValues");
+            JsonNode oldValues = row.get("oldValues");
+            boolean create = "create".equals(row.path("action").asText());
+            java.util.Iterator<String> keys = null;
+            if (newValues != null && newValues.isObject() && newValues.size() > 0) keys = newValues.fieldNames();
+            else if (oldValues != null && oldValues.isObject()) keys = oldValues.fieldNames();
+            if (keys == null) return lines;
+            while (keys.hasNext()) {
+                String key = keys.next();
+                Meta.FieldMeta field = resource == null ? null : resource.field(key);
+                if (field != null && field.isSystem()) continue;
+                if (key.equals("id") || key.equals("companyId")) continue;
+                if (create && field != null && (field.kind().equals("uuid") || field.kind().equals("json"))) continue;
+                String label = field == null ? key : Ui.T(field.label());
+                JsonNode old = oldValues == null ? null : oldValues.get(key);
+                JsonNode neu = newValues == null ? null : newValues.get(key);
+                String from = format(field, old);
+                String to = format(field, neu);
+                if (from.equals("—") && to.equals("—")) continue;
+                lines.add(new String[] { label, from, to });
+            }
+            return lines;
+        }
+
+        private static String format(Meta.FieldMeta field, JsonNode node) {
+            if (node == null || node.isNull() || node.isMissingNode()) return "—";
+            Meta.Document meta = Ui.meta();
+            String locale = Ui.locale();
+            if (field != null && "enum".equals(field.kind()) && field.values() != null && !field.values().isEmpty()) {
+                String name = enumName(node, field.values());
+                if (name != null) return meta.enumLabel(field.enumName(), name, locale);
+            }
+            if (field != null && Set.of("date", "datetime", "bool", "decimal", "enum").contains(field.kind())) {
+                return Fmt.value(field, node, meta, locale, Map.of());
+            }
+            if (node.isTextual()) {
+                String s = node.asText();
+                return s == null || s.isBlank() ? "—" : s;
+            }
+            if (node.isBoolean()) return Texts.get(node.asBoolean() ? "yes" : "no", locale);
+            if (node.isNumber()) return node.asText();
+            return node.asText();
+        }
+
+        private static String enumName(JsonNode node, List<String> values) {
+            if (node.isInt() || node.isLong()) {
+                int i = node.asInt();
+                return i >= 0 && i < values.size() ? values.get(i) : null;
+            }
+            String s = node.asText();
+            if (s == null || s.isBlank()) return null;
+            try {
+                int i = Integer.parseInt(s);
+                if (i >= 0 && i < values.size()) return values.get(i);
+            } catch (NumberFormatException ignored) {}
+            return s;
         }
     }
 }

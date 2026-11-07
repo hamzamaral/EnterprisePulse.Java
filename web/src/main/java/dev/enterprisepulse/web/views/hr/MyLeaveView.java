@@ -88,7 +88,10 @@ public class MyLeaveView extends Div implements BeforeEnterObserver {
         balances.removeAll();
         List<ObjectNode> rows = new ArrayList<>();
         Ui.run(() -> {
-            for (JsonNode b : Ui.api().get("/api/hr/leave-balances?year=" + LocalDate.now().getYear())) {
+            String employeeId = Session.current().user() == null ? null : Session.current().user().path("employeeId").asText(null);
+            String balanceUrl = "/api/hr/leave-balances?year=" + LocalDate.now().getYear()
+                    + (employeeId == null || employeeId.isBlank() ? "" : "&employeeId=" + employeeId);
+            for (JsonNode b : Ui.api().get(balanceUrl)) {
                 Span value = new Span(b.path("remainingDays").asText());
                 value.addClassName("ep-card-value");
                 Div card = Ui.card(Ui.muted(b.path("leaveTypeName").asText() + " · " + b.path("year").asText()),
