@@ -1,1383 +1,289 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="utf-8"/>
-<title>EnterprisePulse.Java — kullanici-kilavuzu</title>
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>EnterprisePulse.Java — Kullanıcı / Ekran Kılavuzu</title>
 <style>
-@page { margin: 18mm; }
-body { font-family: Georgia, 'Times New Roman', serif; line-height: 1.45; color: #111; max-width: 900px; margin: 0 auto; padding: 24px; }
-h1 { font-size: 1.8rem; border-bottom: 2px solid #333; padding-bottom: .3em; }
-h2 { font-size: 1.35rem; margin-top: 1.6em; page-break-after: avoid; }
-h3 { font-size: 1.1rem; margin-top: 1.2em; page-break-after: avoid; }
-code { font-family: Consolas, monospace; background: #f4f4f4; padding: 0 .25em; }
-pre { background: #f4f4f4; padding: 12px; overflow: auto; }
-blockquote { border-left: 4px solid #888; margin-left: 0; padding-left: 1em; color: #444; }
-ul { padding-left: 1.3em; }
-hr { border: none; border-top: 1px solid #ccc; margin: 2em 0; }
-@media print { a { color: inherit; text-decoration: none; } }
-</style></head>
+:root {
+  --ink: #0f172a;
+  --muted: #64748b;
+  --line: #e2e8f0;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --accent: #4338ca;
+  --accent-soft: color-mix(in srgb, var(--accent) 12%, white);
+  --radius: 14px;
+  --shadow: 0 10px 30px rgba(15, 23, 42, .06);
+  --font: "Segoe UI", Inter, system-ui, -apple-system, sans-serif;
+  --mono: ui-monospace, Consolas, "Cascadia Mono", monospace;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: var(--ink);
+  background:
+    radial-gradient(1200px 500px at 10% -10%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 60%),
+    radial-gradient(900px 400px at 100% 0%, rgba(14,165,233,.12), transparent 55%),
+    var(--bg);
+  line-height: 1.55;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 0;
+  min-height: 100vh;
+}
+.toc {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: auto;
+  padding: 28px 18px 40px;
+  background: rgba(255,255,255,.82);
+  backdrop-filter: blur(10px);
+  border-right: 1px solid var(--line);
+}
+.toc .brand {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 18px;
+  padding: 0 8px 16px;
+  border-bottom: 1px solid var(--line);
+}
+.toc .brand strong { font-size: 1.05rem; letter-spacing: -.01em; }
+.toc .brand span { color: var(--muted); font-size: .82rem; }
+.toc nav a {
+  display: block;
+  padding: 7px 10px;
+  border-radius: 8px;
+  color: var(--ink);
+  font-size: .88rem;
+}
+.toc nav a:hover { background: var(--accent-soft); text-decoration: none; }
+.toc nav a.h2 { font-weight: 650; margin-top: 6px; }
+.toc nav a.h3 { padding-left: 18px; color: var(--muted); font-size: .82rem; }
+.main { padding: 28px 36px 80px; max-width: 980px; }
+.hero {
+  background: linear-gradient(135deg, #312e81 0%, var(--accent) 55%, #0ea5e9 120%);
+  color: #fff;
+  border-radius: 22px;
+  padding: 36px 36px 30px;
+  box-shadow: var(--shadow);
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  right: -40px; top: -40px;
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.08);
+}
+.hero .eyebrow {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.22);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: .8rem;
+  margin-bottom: 14px;
+}
+.hero h1 {
+  margin: 0 0 10px;
+  font-size: clamp(1.7rem, 3vw, 2.35rem);
+  letter-spacing: -.03em;
+  line-height: 1.15;
+  border: 0;
+  color: #fff;
+}
+.hero p { margin: 0; opacity: .92; max-width: 46rem; }
+.hero .meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+.pill {
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.2);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: .8rem;
+}
+.print-hint {
+  margin: 0 0 18px;
+  color: var(--muted);
+  font-size: .9rem;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 22px 24px;
+  margin: 18px 0;
+}
+h1 { font-size: 1.9rem; letter-spacing: -.02em; margin: 0 0 .4em; }
+h2 {
+  font-size: 1.35rem;
+  letter-spacing: -.015em;
+  margin: 2rem 0 .75rem;
+  padding-bottom: .35rem;
+  border-bottom: 2px solid color-mix(in srgb, var(--accent) 35%, var(--line));
+  page-break-after: avoid;
+}
+h3 {
+  font-size: 1.08rem;
+  margin: 1.35rem 0 .45rem;
+  color: #1e293b;
+  page-break-after: avoid;
+}
+p { margin: .55rem 0; }
+ul, ol { padding-left: 1.2rem; margin: .45rem 0 .9rem; }
+li { margin: .28rem 0; }
+blockquote {
+  margin: 12px 0;
+  padding: 12px 16px;
+  border-left: 4px solid var(--accent);
+  background: var(--accent-soft);
+  border-radius: 0 12px 12px 0;
+  color: #1e293b;
+}
+code {
+  font-family: var(--mono);
+  font-size: .88em;
+  background: #f1f5f9;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: .08em .4em;
+}
+pre {
+  background: #0f172a;
+  color: #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  overflow: auto;
+  font-family: var(--mono);
+  font-size: .85rem;
+}
+pre code { background: none; border: 0; color: inherit; padding: 0; }
+hr { border: 0; border-top: 1px solid var(--line); margin: 1.8rem 0; }
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  margin: 14px 0 8px;
+}
+.shot {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  break-inside: avoid;
+}
+.shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #eef2ff;
+}
+.shot figcaption {
+  padding: 8px 12px 10px;
+  font-size: .82rem;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+}
+.section-intro {
+  color: var(--muted);
+  font-size: .95rem;
+}
+.footer-note {
+  margin-top: 48px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: .85rem;
+}
+@media (max-width: 960px) {
+  .layout { grid-template-columns: 1fr; }
+  .toc { position: relative; height: auto; max-height: 280px; }
+  .main { padding: 18px 16px 48px; }
+}
+@media print {
+  body { background: #fff; }
+  .toc { display: none; }
+  .layout { display: block; }
+  .main { max-width: none; padding: 0; }
+  .hero { box-shadow: none; break-after: avoid; }
+  .card, .shot { box-shadow: none; }
+  a { color: inherit; text-decoration: none; }
+  .print-hint { display: none; }
+}
+</style>
+</head>
 <body>
-<p style="color:#666;font-size:.9rem">Yazdırmak için Ctrl+P → PDF olarak kaydet.</p>
-<h1>EnterprisePulse.Java — Kullanıcı / Ekran Kılavuzu</h1>
-<blockquote>Bu belge tarayıcıdan veya editörden <strong>PDF olarak yazdır</strong> ile PDF’e dönüştürülebilir.</blockquote>
-<h2>0. Giriş</h2>
-<ul>
-<li><strong>Ürün / stack:</strong> EnterprisePulse.Java — Spring Boot 3.5 API + Vaadin 24</li>
-<li><strong>Web:</strong> <code>http://localhost:8181</code> · <strong>API:</strong> <code>http://localhost:8180</code></li>
-<li><strong>Demo:</strong> <code>admin@enterprisepulse.dev</code> / <code>Admin123!</code>, <code>manager@…</code> / <code>Manager123!</code>, <code>employee@…</code> / <code>Employee123!</code></li>
-<li><strong>Önemli:</strong> Demo veri <strong>Pulse Teknoloji · Genel Merkez</strong> üzerindedir. Pulse Lojistik seçilirse çoğu liste boştur.</li>
-<li>Liste ekranları <code>/r/{kaynak}</code> Vaadin rotalarındadır.</li>
-</ul>
-<p>Bölüm numaraları sol menü gruplarına, alt başlıklar menü öğelerine karşılık gelir (ör. <strong>2. İnsan Kaynakları</strong> → <strong>2.1 İzinlerim</strong>).</p>
-<hr/>
-<h2>1. Genel</h2>
-<p>Menüdeki <strong>Genel</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p>
-<h3>1.1 Gösterge Paneli</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>/</code></li>
-</ul>
-<p>Kurumsal gösterge paneli. Oturumdaki kullanıcının yetkilerine göre KPI kartları gösterir: onay bekleyenler, okunmamış bildirimler, aktif kullanıcılar, İK (kalan izin, bugün izinde), demirbaş zimmetleri, stok ve finans özetleri. Kartlara tıklayınca ilgili liste veya self-servis sayfasına gider. Üst barda şirket/şube seçici, dil (TR/EN), tema, bildirim zili ve profil menüsü bulunur.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>1.2 Onay Kutum</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>workflow/inbox</code></li>
-</ul>
-<p>Onay kutusu. Kullanıcıya atanmış bekleyen onay adımlarını listeler (izin, zimmet, masraf vb.). Her satırda belge türü, talep sahibi ve özet görünür. Açınca belge özeti ile Onayla / Reddet (gerekçe) işlemleri yapılır. Süreç bitince belge durumu güncellenir ve bildirim gider.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<hr/>
-<h2>2. İnsan Kaynakları</h2>
-<p>Menüdeki <strong>İnsan Kaynakları</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p>
-<h3>2.1 İzinlerim</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>hr/my-leave</code></li>
-</ul>
-<p>Self-servis izin bakiyesi ve talepleri. Yıl bazında izin türü kartları (hak, kullanılan, bekleyen, kalan). Yeni talep: tür, tarih aralığı, gün hesabı, açıklama. Talepler durum etiketleriyle listelenir. Yönetici kendi bakiyesini görür; onay Onay Kutum üzerinden yürür.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>2.2 Mesaim</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>hr/my-attendance</code></li>
-</ul>
-<p>Mesai / giriş-çıkış self-servisi. Günlük mesai, geç kalma ve fazla mesai özeti. Personel kendi kayıtlarını görür; İK puantajda düzeltme yapabilir.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>2.3 Organizasyon Şeması</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>hr/org-chart</code></li>
-</ul>
-<p>Organizasyon şeması. Departman ve yönetici hiyerarşisine göre personeli ağaç veya iç içe listede gösterir.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>2.4 Personel</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/employees</code></li>
-<li><strong>Metadata resource:</strong> <code>employees</code></li>
-<li><strong>İzinler:</strong> <code>employees:read</code></li>
-</ul>
-<p>Personel kartları listesi ve detay. Sicil, departman, pozisyon, yönetici, işe giriş, durum. Detayda izin, zimmet, ücret, eğitim, sözleşme sekmeleri (yetkiye göre).</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>2.5 Departmanlar</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/departments</code></li>
-<li><strong>Metadata resource:</strong> <code>departments</code></li>
-<li><strong>İzinler:</strong> <code>departments:read</code></li>
-</ul>
-<p>Departman tanımları. Kod, ad, üst departman, yönetici. Org şeması buradaki hiyerarşiyi kullanır.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>2.6 Pozisyonlar</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/positions</code></li>
-<li><strong>Metadata resource:</strong> <code>positions</code></li>
-<li><strong>İzinler:</strong> <code>positions:read</code></li>
-</ul>
-<p>Pozisyon / unvan tanımları. Departman ilişkisi ve personel atamalarında kullanılır.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>2.7 İzin Talepleri</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/leave-requests</code></li>
-<li><strong>Metadata resource:</strong> <code>leave-requests</code></li>
-<li><strong>İzinler:</strong> <code>leave:read</code></li>
-</ul>
-<p>İK görünümü: tüm izin talepleri. Durum, tür, personel, tarih filtresi.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>2.8 İzin Ayarları</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/leave-types</code></li>
-<li><strong>Metadata resource:</strong> <code>leave-types</code></li>
-<li><strong>İzinler:</strong> <code>leave:update</code></li>
-</ul>
-<p>İzin türü ayarları: yıllık, mazeret vb. Hak günü, taşıma, onay gereksinimi.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>2.9 Puantaj</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>hr/timesheet</code></li>
-<li><strong>İzinler:</strong> <code>attendance:read</code></li>
-</ul>
-<p>Aylık puantaj çizelgesi. Personel × gün: mesai, izin, resmi tatil, İK düzeltmeleri.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>2.10 Vardiya Planlama</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/shifts</code></li>
-<li><strong>Metadata resource:</strong> <code>shifts</code></li>
-<li><strong>İzinler:</strong> <code>attendance:read</code></li>
-</ul>
-<p>Vardiya tanımları ve haftalık plan. Gece vardiyası, kopyalama, personel ataması.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<hr/>
-<h2>3. Masraf ve Harcırah</h2>
-<p>Menüdeki <strong>Masraf ve Harcırah</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p>
-<h3>3.1 Masraflarım</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>expenses/my</code></li>
-</ul>
-<p>Personelin kendi masraf formları. Taslak, fiş eki, onaya gönderme, ödeme durumu.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>3.2 Masraf Formları</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/expense-reports</code></li>
-<li><strong>Metadata resource:</strong> <code>expense-reports</code></li>
-<li><strong>İzinler:</strong> <code>expenses:read</code></li>
-</ul>
-<p>Masraf formları (yönetici/finans). Onay, red, kasa/banka ödemesi, proje bağlantısı.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>3.3 Masraf Türleri</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/expense-categories</code></li>
-<li><strong>Metadata resource:</strong> <code>expense-categories</code></li>
-<li><strong>İzinler:</strong> <code>expenses:update</code></li>
-</ul>
-<p>Masraf türleri: limit, fiş zorunluluğu, harcırah ve km ücreti.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<hr/>
-<h2>4. Bordro</h2>
-<p>Menüdeki <strong>Bordro</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p>
-<h3>4.1 Bordrolarım</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>payroll/my</code></li>
-</ul>
-<p>Personelin kendi ücret pusulaları. Dönem, brüt, kesinti, net.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>4.2 Bordrolar</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/payroll-periods</code></li>
-<li><strong>Metadata resource:</strong> <code>payroll-periods</code></li>
-<li><strong>İzinler:</strong> <code>payroll:read</code></li>
-</ul>
-<p>Bordro dönemleri. Hesaplama, onay, maaş ödemesi ve geri alma.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>4.3 Ücretler</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/salary-records</code></li>
-<li><strong>Metadata resource:</strong> <code>salary-records</code></li>
-<li><strong>İzinler:</strong> <code>payroll:read</code></li>
-</ul>
-<p>Ücret kayıtları ve geçmiş.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>4.4 Bordro parametreleri</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/payroll-parameters</code></li>
-<li><strong>Metadata resource:</strong> <code>payroll-parameters</code></li>
-<li><strong>İzinler:</strong> <code>payroll:update</code></li>
-</ul>
-<p>Yıllık bordro parametreleri, SGK / vergi dilimleri.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<hr/>
-<h2>5. İşe Alım</h2>
-<p>Menüdeki <strong>İşe Alım</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p>
-<h3>5.1 Mülakatlarım</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>recruitment/interviews</code></li>
-</ul>
-<p>Mülakatçıya atanmış mülakatlar. Puan, tavsiye, not.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>5.2 İş İlanları</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/job-postings</code></li>
-<li><strong>Metadata resource:</strong> <code>job-postings</code></li>
-<li><strong>İzinler:</strong> <code>recruitment:read</code></li>
-</ul>
-<p>İş ilanları: yayınlama, bekletme, kapatma; başvuru hattına geçiş.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>5.3 Adaylar</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/candidates</code></li>
-<li><strong>Metadata resource:</strong> <code>candidates</code></li>
-<li><strong>İzinler:</strong> <code>recruitment:read</code></li>
-</ul>
-<p>Aday havuzu, CV, profil.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>5.4 Başvurular</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/job-applications</code></li>
-<li><strong>Metadata resource:</strong> <code>job-applications</code></li>
-<li><strong>İzinler:</strong> <code>recruitment:read</code></li>
-</ul>
-<p>Başvurular ve aşama hattı. Teklif, ret, personele dönüştürme.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<hr/>
-<h2>6. Performans ve Eğitim</h2>
-<p>Menüdeki <strong>Performans ve Eğitim</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p>
-<h3>6.1 Değerlendirmelerim</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>performance/my</code></li>
-</ul>
-<p>Öz ve yönetici değerlendirme formları. Hedefler, yetkinlik puanları.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>6.2 Eğitimlerim</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>training/my</code></li>
-</ul>
-<p>Kayıtlı eğitimler, zorunlu sertifikalar, geri bildirim.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>6.3 Değerlendirme Dönemleri</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/review-cycles</code></li>
-<li><strong>Metadata resource:</strong> <code>review-cycles</code></li>
-<li><strong>İzinler:</strong> <code>performance:read</code></li>
-</ul>
-<p>Performans değerlendirme dönemleri: başlatma, kapatma, özet.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>6.4 Yetkinlikler</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/competencies</code></li>
-<li><strong>Metadata resource:</strong> <code>competencies</code></li>
-<li><strong>İzinler:</strong> <code>performance:read</code></li>
-</ul>
-<p>Yetkinlik kataloğu.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>6.5 Eğitim Oturumları</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/training-sessions</code></li>
-<li><strong>Metadata resource:</strong> <code>training-sessions</code></li>
-<li><strong>İzinler:</strong> <code>training:read</code></li>
-</ul>
-<p>Eğitim oturumları: katılımcı, puan, maliyet.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>6.6 Eğitim Kataloğu</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/training-courses</code></li>
-<li><strong>Metadata resource:</strong> <code>training-courses</code></li>
-<li><strong>İzinler:</strong> <code>training:read</code></li>
-</ul>
-<p>Eğitim kataloğu tanımları.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>6.7 Zorunlu Eğitim Uyumu</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>training/compliance</code></li>
-<li><strong>İzinler:</strong> <code>training:read</code></li>
-</ul>
-<p>Zorunlu eğitim uyum matrisi (personel × kurs).</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<hr/>
-<h2>7. Destek</h2>
-<p>Menüdeki <strong>Destek</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p>
-<h3>7.1 Destek Taleplerim</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>support/my</code></li>
-</ul>
-<p>Self-servis destek: açma, yanıt, ek, çözüm onayı / yeniden açma, puan.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>7.2 Destek Kuyruğu</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/tickets</code></li>
-<li><strong>Metadata resource:</strong> <code>tickets</code></li>
-<li><strong>İzinler:</strong> <code>support:read</code></li>
-</ul>
-<p>Destek kuyruğu: SLA, öncelik, atama, dahili not, durum geçişleri.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>7.3 Destek Ayarları</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/ticket-categories</code></li>
-<li><strong>Metadata resource:</strong> <code>ticket-categories</code></li>
-<li><strong>İzinler:</strong> <code>support:update</code></li>
-</ul>
-<p>Kategori, varsayılan sorumlu, SLA hedefleri.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<hr/>
-<h2>8. Proje Yönetimi</h2>
-<p>Menüdeki <strong>Proje Yönetimi</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p>
-<h3>8.1 Görevlerim</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>projects/my-tasks</code></li>
-</ul>
-<p>Kullanıcıya atanmış proje görevleri.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>8.2 Zaman Çizelgesi</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>projects/timesheet</code></li>
-</ul>
-<p>Haftalık zaman çizelgesi: projeye süre kaydı.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>8.3 Projeler</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/projects</code></li>
-<li><strong>Metadata resource:</strong> <code>projects</code></li>
-</ul>
-<p>Proje listesi ve detay: ekip, görevler, bütçe, ilerleme.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<hr/>
-<h2>9. Zimmet ve Demirbaş</h2>
-<p>Menüdeki <strong>Zimmet ve Demirbaş</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p>
-<h3>9.1 Zimmetlerim</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>assets/my</code></li>
-</ul>
-<p>Zimmetimdeki demirbaşlar; iade / onay bekleyenler.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>9.2 Demirbaşlar</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/assets</code></li>
-<li><strong>Metadata resource:</strong> <code>assets</code></li>
-<li><strong>İzinler:</strong> <code>assets:read</code></li>
-</ul>
-<p>Demirbaş kartları: kategori, durum (zimmetli/depo/hurda/bakım), marka-model, QR.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>9.3 Zimmetler</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/asset-assignments</code></li>
-<li><strong>Metadata resource:</strong> <code>asset-assignments</code></li>
-<li><strong>İzinler:</strong> <code>assets:read</code></li>
-</ul>
-<p>Zimmet / iade / devir kayıtları ve tutanak onayları.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>9.4 Demirbaş Sayımı</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/asset-counts</code></li>
-<li><strong>Metadata resource:</strong> <code>asset-counts</code></li>
-<li><strong>İzinler:</strong> <code>assets:read</code></li>
-</ul>
-<p>Demirbaş sayımı ve fark raporu.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>9.5 Demirbaş Ayarları</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/asset-categories</code></li>
-<li><strong>Metadata resource:</strong> <code>asset-categories</code></li>
-<li><strong>İzinler:</strong> <code>assets:update</code></li>
-</ul>
-<p>Demirbaş kategori ve amortisman ayarları.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<hr/>
-<h2>10. Stok ve Depo</h2>
-<p>Menüdeki <strong>Stok ve Depo</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p>
-<h3>10.1 Stok Durumu</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>inventory</code></li>
-<li><strong>İzinler:</strong> <code>inventory:read</code></li>
-</ul>
-<p>Stok durumu: kalem, minimum altı, stok değeri, depo; kritik filtre.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>10.2 Ürünler</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/products</code></li>
-<li><strong>Metadata resource:</strong> <code>products</code></li>
-<li><strong>İzinler:</strong> <code>inventory:read</code></li>
-</ul>
-<p>Ürün ve varyantlar: SKU, barkod, lot/seri takibi, birim.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>10.3 Stok Hareketleri</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/stock-movements</code></li>
-<li><strong>Metadata resource:</strong> <code>stock-movements</code></li>
-<li><strong>İzinler:</strong> <code>inventory:read</code></li>
-</ul>
-<p>Stok fişleri: giriş, çıkış, transfer, düzeltme; lot/seri satırları.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>10.4 Stok Sayımı</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/stock-counts</code></li>
-<li><strong>Metadata resource:</strong> <code>stock-counts</code></li>
-<li><strong>İzinler:</strong> <code>inventory:read</code></li>
-</ul>
-<p>Stok sayımı ve fark düzeltmesi.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>10.5 Depo ve Kategoriler</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/warehouses</code></li>
-<li><strong>Metadata resource:</strong> <code>warehouses</code></li>
-<li><strong>İzinler:</strong> <code>inventory:update</code></li>
-</ul>
-<p>Depo ve stok kategori tanımları.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<hr/>
-<h2>11. Üretim</h2>
-<p>Menüdeki <strong>Üretim</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p>
-<h3>11.1 İş emirleri</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/work-orders</code></li>
-<li><strong>Metadata resource:</strong> <code>work-orders</code></li>
-<li><strong>İzinler:</strong> <code>production:read</code></li>
-</ul>
-<p>Üretim iş emirleri: serbest bırakma, üretim kaydı, malzeme, kapatma.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>11.2 Ürün ağaçları</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/bill-of-materials</code></li>
-<li><strong>Metadata resource:</strong> <code>bill-of-materials</code></li>
-<li><strong>İzinler:</strong> <code>production:read</code></li>
-</ul>
-<p>Ürün ağacı (BOM): bileşenler, standart maliyet.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>11.3 Malzeme ihtiyacı</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>production/requirements</code></li>
-<li><strong>İzinler:</strong> <code>production:read</code></li>
-</ul>
-<p>MRP / malzeme ihtiyacı: net ihtiyaç, talep veya iş emri.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<hr/>
-<h2>12. Satın Alma</h2>
-<p>Menüdeki <strong>Satın Alma</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p>
-<h3>12.1 Satın Alma Talepleri</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/purchase-requests</code></li>
-<li><strong>Metadata resource:</strong> <code>purchase-requests</code></li>
-<li><strong>İzinler:</strong> <code>workflow:start</code>, <code>purchasing:create</code>, <code>purchasing:read</code></li>
-</ul>
-<p>Satın alma talepleri ve onay.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>12.2 Tedarikçi Teklifleri</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/supplier-quotes</code></li>
-<li><strong>Metadata resource:</strong> <code>supplier-quotes</code></li>
-<li><strong>İzinler:</strong> <code>purchasing:read</code></li>
-</ul>
-<p>Tedarikçi teklifleri ve karşılaştırma.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>12.3 Satın Alma Siparişleri</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/purchase-orders</code></li>
-<li><strong>Metadata resource:</strong> <code>purchase-orders</code></li>
-<li><strong>İzinler:</strong> <code>purchasing:read</code></li>
-</ul>
-<p>Satın alma siparişleri: teslim / fatura miktarları.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>12.4 Mal Kabul</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/goods-receipts</code></li>
-<li><strong>Metadata resource:</strong> <code>goods-receipts</code></li>
-<li><strong>İzinler:</strong> <code>purchasing:read</code></li>
-</ul>
-<p>Mal kabul irsaliyeleri; stoğa giriş.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>12.5 Alış Faturaları</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/purchase-invoices</code></li>
-<li><strong>Metadata resource:</strong> <code>purchase-invoices</code></li>
-<li><strong>İzinler:</strong> <code>purchasing:read</code>, <code>finance:read</code></li>
-</ul>
-<p>Alış faturaları; borç ve muhasebe bağlantısı.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<hr/>
-<h2>13. CRM</h2>
-<p>Menüdeki <strong>CRM</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p>
-<h3>13.1 Potansiyel müşteriler</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/leads</code></li>
-<li><strong>Metadata resource:</strong> <code>leads</code></li>
-<li><strong>İzinler:</strong> <code>crm:read</code></li>
-</ul>
-<p>Potansiyel müşteriler; cariye / fırsata dönüştürme.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>13.2 Satış fırsatları</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/opportunities</code></li>
-<li><strong>Metadata resource:</strong> <code>opportunities</code></li>
-<li><strong>İzinler:</strong> <code>crm:read</code></li>
-</ul>
-<p>Satış fırsatları: aşama, tutar, ağırlıklı değer, teklif bağlantısı.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>13.3 Aktiviteler</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/crm-activities</code></li>
-<li><strong>Metadata resource:</strong> <code>crm-activities</code></li>
-<li><strong>İzinler:</strong> <code>crm:read</code></li>
-</ul>
-<p>Arama, toplantı, görev aktiviteleri; geciken / bugün.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<hr/>
-<h2>14. Satış</h2>
-<p>Menüdeki <strong>Satış</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p>
-<h3>14.1 Satış Teklifleri</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/sales-quotes</code></li>
-<li><strong>Metadata resource:</strong> <code>sales-quotes</code></li>
-<li><strong>İzinler:</strong> <code>sales:read</code></li>
-</ul>
-<p>Satış teklifleri: kalemler, kabul ile siparişe dönüşüm.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>14.2 Satış Siparişleri</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/sales-orders</code></li>
-<li><strong>Metadata resource:</strong> <code>sales-orders</code></li>
-<li><strong>İzinler:</strong> <code>sales:read</code></li>
-</ul>
-<p>Satış siparişleri: rezervasyon, sevk, faturalama durumu.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>14.3 Sevk İrsaliyeleri</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/delivery-notes</code></li>
-<li><strong>Metadata resource:</strong> <code>delivery-notes</code></li>
-<li><strong>İzinler:</strong> <code>sales:read</code></li>
-</ul>
-<p>Sevk irsaliyeleri; stok çıkışı.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>14.4 Satış Faturaları</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/sales-invoices</code></li>
-<li><strong>Metadata resource:</strong> <code>sales-invoices</code></li>
-<li><strong>İzinler:</strong> <code>sales:read</code>, <code>finance:read</code></li>
-</ul>
-<p>Satış faturaları: tahsilat durumu, e-fatura bağlantısı.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>14.5 Satış İadeleri</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/sales-returns</code></li>
-<li><strong>Metadata resource:</strong> <code>sales-returns</code></li>
-<li><strong>İzinler:</strong> <code>sales:read</code>, <code>finance:read</code></li>
-</ul>
-<p>Satış iadeleri.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<hr/>
-<h2>15. Cari ve Finans</h2>
-<p>Menüdeki <strong>Cari ve Finans</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p>
-<h3>15.1 Cari Hesaplar</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/business-partners</code></li>
-<li><strong>Metadata resource:</strong> <code>business-partners</code></li>
-<li><strong>İzinler:</strong> <code>partners:read</code></li>
-</ul>
-<p>Cari hesaplar (müşteri/tedarikçi): vade, kredi limiti, döviz, hareketler.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>15.2 Kasa ve Bankalar</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/treasury-accounts</code></li>
-<li><strong>Metadata resource:</strong> <code>treasury-accounts</code></li>
-<li><strong>İzinler:</strong> <code>finance:read</code></li>
-</ul>
-<p>Kasa ve banka hesapları. Kod, tür (kasa/banka), para birimi, IBAN, aktiflik. Hareketler tahsilat/ödeme/çek ile oluşur. Demo seed Pulse Teknoloji üzerindedir.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>15.3 Tahsilatlar</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/partner-payments</code></li>
-<li><strong>Metadata resource:</strong> <code>partner-payments</code></li>
-<li><strong>İzinler:</strong> <code>finance:read</code></li>
-</ul>
-<p>Tahsilat ve ödemeler: yöntem, kasa/banka, fatura mahsupları.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>15.4 Ödemeler</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/partner-payments</code></li>
-<li><strong>Metadata resource:</strong> <code>partner-payments</code></li>
-<li><strong>İzinler:</strong> <code>finance:read</code></li>
-</ul>
-<p>Tahsilat ve ödemeler: yöntem, kasa/banka, fatura mahsupları.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>15.5 Çek ve Senetler</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/cheques</code></li>
-<li><strong>Metadata resource:</strong> <code>cheques</code></li>
-<li><strong>İzinler:</strong> <code>finance:read</code></li>
-</ul>
-<p>Çek ve senet portföyü: yatırma, tahsil, ciro.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>15.6 Yaşlandırma</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>finance/aging</code></li>
-<li><strong>İzinler:</strong> <code>finance:read</code></li>
-</ul>
-<p>Alacak / borç yaşlandırma raporu.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<hr/>
-<h2>16. Muhasebe</h2>
-<p>Menüdeki <strong>Muhasebe</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p>
-<h3>16.1 Muhasebe paneli</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>accounting</code></li>
-<li><strong>İzinler:</strong> <code>accounting:read</code></li>
-</ul>
-<p>Muhasebe paneli: kasa, alacak, borç, net kâr, aylık gelir-gider, bekleyen belgeleri muhasebeleştirme.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>16.2 Yevmiye defteri</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/journal-entries</code></li>
-<li><strong>Metadata resource:</strong> <code>journal-entries</code></li>
-<li><strong>İzinler:</strong> <code>accounting:read</code></li>
-</ul>
-<p>Yevmiye defteri: fiş listeleme, kesinleştirme, ters kayıt.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>16.3 Hesap planı</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/ledger-accounts</code></li>
-<li><strong>Metadata resource:</strong> <code>ledger-accounts</code></li>
-<li><strong>İzinler:</strong> <code>accounting:read</code></li>
-</ul>
-<p>Tekdüzen hesap planı; alt hesap ekleme.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>16.4 Mizan</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>accounting/trial-balance</code></li>
-<li><strong>İzinler:</strong> <code>accounting:read</code></li>
-</ul>
-<p>Mizan: dönem hareketleri ve bakiyeler.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>16.5 Bilanço</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>accounting/balance-sheet</code></li>
-<li><strong>İzinler:</strong> <code>accounting:read</code></li>
-</ul>
-<p>Bilanço raporu.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>16.6 Gelir tablosu</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>accounting/income-statement</code></li>
-<li><strong>İzinler:</strong> <code>accounting:read</code></li>
-</ul>
-<p>Gelir tablosu.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>16.7 e-Fatura</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/e-invoices</code></li>
-<li><strong>Metadata resource:</strong> <code>e-invoices</code></li>
-<li><strong>İzinler:</strong> <code>einvoice:read</code></li>
-</ul>
-<p>e-Fatura kuyruğu: UBL-TR, GİB durum simülasyonu, gelen/giden.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<hr/>
-<h2>17. Sözleşmeler</h2>
-<p>Menüdeki <strong>Sözleşmeler</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p>
-<h3>17.1 Sözleşmeler</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/contracts</code></li>
-<li><strong>Metadata resource:</strong> <code>contracts</code></li>
-<li><strong>İzinler:</strong> <code>contracts:read</code></li>
-</ul>
-<p>Sözleşmeler: cari/personel, yürürlük, yenileme, fesih, ekler.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>17.2 Sözleşme Türleri</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/contract-types</code></li>
-<li><strong>Metadata resource:</strong> <code>contract-types</code></li>
-<li><strong>İzinler:</strong> <code>contracts:update</code></li>
-</ul>
-<p>Sözleşme türü tanımları.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<hr/>
-<h2>18. Bütçe</h2>
-<p>Menüdeki <strong>Bütçe</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p>
-<h3>18.1 Bütçeler</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/budgets</code></li>
-<li><strong>Metadata resource:</strong> <code>budgets</code></li>
-<li><strong>İzinler:</strong> <code>budgets:read</code></li>
-</ul>
-<p>Şirket / departman bütçeleri: plan vs gerçekleşen, sapma.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>18.2 Bütçe Girişleri</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/budget-entries</code></li>
-<li><strong>Metadata resource:</strong> <code>budget-entries</code></li>
-<li><strong>İzinler:</strong> <code>budgets:read</code></li>
-</ul>
-<p>Gerçekleşen bütçe girişleri (kira, reklam vb.).</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>18.3 Bütçe Kalemleri</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/budget-items</code></li>
-<li><strong>Metadata resource:</strong> <code>budget-items</code></li>
-<li><strong>İzinler:</strong> <code>budgets:update</code></li>
-</ul>
-<p>Bütçe kalemi ve kategori eşlemesi.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<hr/>
-<h2>19. Araç ve Filo</h2>
-<p>Menüdeki <strong>Araç ve Filo</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p>
-<h3>19.1 Araçlar</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/vehicles</code></li>
-<li><strong>Metadata resource:</strong> <code>vehicles</code></li>
-<li><strong>İzinler:</strong> <code>fleet:read</code></li>
-</ul>
-<p>Filo araç kartları: sürücü, bakım, muayene, sigorta.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>19.2 Yakıt Defteri</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/vehicle-fuel-entries</code></li>
-<li><strong>Metadata resource:</strong> <code>vehicle-fuel-entries</code></li>
-<li><strong>İzinler:</strong> <code>fleet:read</code></li>
-</ul>
-<p>Yakıt defteri.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>19.3 Araçlarım</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>fleet/my</code></li>
-</ul>
-<p>Sürücünün zimmetli araçları; yakıt ve km girişi.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<hr/>
-<h2>20. Raporlar</h2>
-<p>Menüdeki <strong>Raporlar</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p>
-<h3>20.1 Satış Analizi</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>reports/sales</code></li>
-<li><strong>İzinler:</strong> <code>sales:read</code></li>
-</ul>
-<p>Satış analizi raporu.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>20.2 Alış Analizi</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>reports/purchases</code></li>
-<li><strong>İzinler:</strong> <code>purchasing:read</code></li>
-</ul>
-<p>Alış analizi.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>20.3 Nakit Akışı</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>reports/cash-flow</code></li>
-<li><strong>İzinler:</strong> <code>finance:read</code></li>
-</ul>
-<p>Nakit akışı.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<hr/>
-<h2>21. Onay Süreçleri</h2>
-<p>Menüdeki <strong>Onay Süreçleri</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p>
-<h3>21.1 Tüm Talepler</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/workflow-instances</code></li>
-<li><strong>Metadata resource:</strong> <code>workflow-instances</code></li>
-<li><strong>İzinler:</strong> <code>workflow:read</code></li>
-</ul>
-<p>Tüm onay süreç örnekleri (yönetim).</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>21.2 Akış Tanımları</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/workflow-definitions</code></li>
-<li><strong>Metadata resource:</strong> <code>workflow-definitions</code></li>
-<li><strong>İzinler:</strong> <code>workflow:read</code></li>
-</ul>
-<p>Onay akış tanımları: adımlar, roller.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<hr/>
-<h2>22. Organizasyon</h2>
-<p>Menüdeki <strong>Organizasyon</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p>
-<h3>22.1 Şirketler</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/companies</code></li>
-<li><strong>Metadata resource:</strong> <code>companies</code></li>
-<li><strong>İzinler:</strong> <code>companies:read</code></li>
-</ul>
-<p>Şirket (kiracı) kartları.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>22.2 Şubeler</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/branches</code></li>
-<li><strong>Metadata resource:</strong> <code>branches</code></li>
-<li><strong>İzinler:</strong> <code>branches:read</code></li>
-</ul>
-<p>Şube tanımları.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>22.3 Kullanıcılar</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/users</code></li>
-<li><strong>Metadata resource:</strong> <code>users</code></li>
-<li><strong>İzinler:</strong> <code>users:read</code></li>
-</ul>
-<p>Kullanıcı hesapları ve şirket üyelikleri.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>22.4 Roller ve İzinler</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>roles</code></li>
-<li><strong>İzinler:</strong> <code>roles:read</code></li>
-</ul>
-<p>Rol ve izin matrisi.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<hr/>
-<h2>23. Sistem</h2>
-<p>Menüdeki <strong>Sistem</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p>
-<h3>23.1 Denetim Kaydı</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>r/audit-logs</code></li>
-<li><strong>Metadata resource:</strong> <code>audit-logs</code></li>
-<li><strong>İzinler:</strong> <code>audit:read</code></li>
-</ul>
-<p>Denetim kaydı: kim, ne zaman, hangi alan değişti (okunabilir Geçmiş).</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<h3>23.2 Ayarlar</h3>
-<ul>
-<li><strong>Rota / kaynak:</strong> <code>settings</code></li>
-<li><strong>İzinler:</strong> <code>settings:read</code></li>
-</ul>
-<p>Şirket ayarları: para birimi, kur, KDV, birim, numaralandırma, genel.</p>
-<p><strong>Nasıl kullanılır:</strong></p>
-<ul>
-<li>Menüden ilgili öğeyi açın.</li>
-<li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li>
-<li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li>
-<li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li>
-</ul>
-<hr/>
-<h2>Ek A. Ortak kalıplar</h2>
-<ul>
-<li><strong>Liste:</strong> arama, rozetler, sayfalama, + Yeni</li>
-<li><strong>Form/detay:</strong> doğrulama, ilişkili seçiciler, durum butonları</li>
-<li><strong>Onay:</strong> çok adımlı workflow, red gerekçesi, bildirim</li>
-<li><strong>Çok şirket:</strong> üst bar şirket/şube seçici → <code>companyId</code> bağlamı</li>
-</ul>
-<h2>Ek B. İlgili belgeler</h2>
-<ul>
-<li>Teknik kılavuz: <a href="teknik-kilavuz.md"><code>teknik-kilavuz.md</code></a></li>
-<li>Kısa başlangıç: kök <code>README.md</code></li>
-</ul>
-</body></html>
+<div class="layout">
+  <aside class="toc">
+    <div class="brand">
+      <strong>EnterprisePulse.Java</strong>
+      <span>Spring Boot 3.5 · Vaadin 24</span>
+    </div>
+    <nav>
+      <a class="h2" href="#top">Başa dön</a>
+      <a class="h2" href="#0-giriş">0. Giriş</a><a class="h2" href="#1-genel">1. Genel</a><a class="h3" href="#11-gösterge-paneli">1.1 Gösterge Paneli</a><a class="h3" href="#12-onay-kutum">1.2 Onay Kutum</a><a class="h2" href="#2-insan-kaynakları">2. İnsan Kaynakları</a><a class="h3" href="#21-izinlerim">2.1 İzinlerim</a><a class="h3" href="#22-mesaim">2.2 Mesaim</a><a class="h3" href="#23-organizasyon-şeması">2.3 Organizasyon Şeması</a><a class="h3" href="#24-personel">2.4 Personel</a><a class="h3" href="#25-departmanlar">2.5 Departmanlar</a><a class="h3" href="#26-pozisyonlar">2.6 Pozisyonlar</a><a class="h3" href="#27-izin-talepleri">2.7 İzin Talepleri</a><a class="h3" href="#28-izin-ayarları">2.8 İzin Ayarları</a><a class="h3" href="#29-puantaj">2.9 Puantaj</a><a class="h3" href="#210-vardiya-planlama">2.10 Vardiya Planlama</a><a class="h2" href="#3-masraf-ve-harcırah">3. Masraf ve Harcırah</a><a class="h3" href="#31-masraflarım">3.1 Masraflarım</a><a class="h3" href="#32-masraf-formları">3.2 Masraf Formları</a><a class="h3" href="#33-masraf-türleri">3.3 Masraf Türleri</a><a class="h2" href="#4-bordro">4. Bordro</a><a class="h3" href="#41-bordrolarım">4.1 Bordrolarım</a><a class="h3" href="#42-bordrolar">4.2 Bordrolar</a><a class="h3" href="#43-ücretler">4.3 Ücretler</a><a class="h3" href="#44-bordro-parametreleri">4.4 Bordro parametreleri</a><a class="h2" href="#5-işe-alım">5. İşe Alım</a><a class="h3" href="#51-mülakatlarım">5.1 Mülakatlarım</a><a class="h3" href="#52-iş-ilanları">5.2 İş İlanları</a><a class="h3" href="#53-adaylar">5.3 Adaylar</a><a class="h3" href="#54-başvurular">5.4 Başvurular</a><a class="h2" href="#6-performans-ve-eğitim">6. Performans ve Eğitim</a><a class="h3" href="#61-değerlendirmelerim">6.1 Değerlendirmelerim</a><a class="h3" href="#62-eğitimlerim">6.2 Eğitimlerim</a><a class="h3" href="#63-değerlendirme-dönemleri">6.3 Değerlendirme Dönemleri</a><a class="h3" href="#64-yetkinlikler">6.4 Yetkinlikler</a><a class="h3" href="#65-eğitim-oturumları">6.5 Eğitim Oturumları</a><a class="h3" href="#66-eğitim-kataloğu">6.6 Eğitim Kataloğu</a><a class="h3" href="#67-zorunlu-eğitim-uyumu">6.7 Zorunlu Eğitim Uyumu</a><a class="h2" href="#7-destek">7. Destek</a><a class="h3" href="#71-destek-taleplerim">7.1 Destek Taleplerim</a><a class="h3" href="#72-destek-kuyruğu">7.2 Destek Kuyruğu</a><a class="h3" href="#73-destek-ayarları">7.3 Destek Ayarları</a><a class="h2" href="#8-proje-yönetimi">8. Proje Yönetimi</a><a class="h3" href="#81-görevlerim">8.1 Görevlerim</a><a class="h3" href="#82-zaman-çizelgesi">8.2 Zaman Çizelgesi</a><a class="h3" href="#83-projeler">8.3 Projeler</a><a class="h2" href="#9-zimmet-ve-demirbaş">9. Zimmet ve Demirbaş</a><a class="h3" href="#91-zimmetlerim">9.1 Zimmetlerim</a><a class="h3" href="#92-demirbaşlar">9.2 Demirbaşlar</a><a class="h3" href="#93-zimmetler">9.3 Zimmetler</a><a class="h3" href="#94-demirbaş-sayımı">9.4 Demirbaş Sayımı</a><a class="h3" href="#95-demirbaş-ayarları">9.5 Demirbaş Ayarları</a><a class="h2" href="#10-stok-ve-depo">10. Stok ve Depo</a><a class="h3" href="#101-stok-durumu">10.1 Stok Durumu</a><a class="h3" href="#102-ürünler">10.2 Ürünler</a><a class="h3" href="#103-stok-hareketleri">10.3 Stok Hareketleri</a><a class="h3" href="#104-stok-sayımı">10.4 Stok Sayımı</a><a class="h3" href="#105-depo-ve-kategoriler">10.5 Depo ve Kategoriler</a><a class="h2" href="#11-üretim">11. Üretim</a><a class="h3" href="#111-iş-emirleri">11.1 İş emirleri</a><a class="h3" href="#112-ürün-ağaçları">11.2 Ürün ağaçları</a><a class="h3" href="#113-malzeme-ihtiyacı">11.3 Malzeme ihtiyacı</a><a class="h2" href="#12-satın-alma">12. Satın Alma</a><a class="h3" href="#121-satın-alma-talepleri">12.1 Satın Alma Talepleri</a><a class="h3" href="#122-tedarikçi-teklifleri">12.2 Tedarikçi Teklifleri</a><a class="h3" href="#123-satın-alma-siparişleri">12.3 Satın Alma Siparişleri</a><a class="h3" href="#124-mal-kabul">12.4 Mal Kabul</a><a class="h3" href="#125-alış-faturaları">12.5 Alış Faturaları</a><a class="h2" href="#13-crm">13. CRM</a><a class="h3" href="#131-potansiyel-müşteriler">13.1 Potansiyel müşteriler</a><a class="h3" href="#132-satış-fırsatları">13.2 Satış fırsatları</a><a class="h3" href="#133-aktiviteler">13.3 Aktiviteler</a><a class="h2" href="#14-satış">14. Satış</a><a class="h3" href="#141-satış-teklifleri">14.1 Satış Teklifleri</a><a class="h3" href="#142-satış-siparişleri">14.2 Satış Siparişleri</a><a class="h3" href="#143-sevk-irsaliyeleri">14.3 Sevk İrsaliyeleri</a><a class="h3" href="#144-satış-faturaları">14.4 Satış Faturaları</a><a class="h3" href="#145-satış-iadeleri">14.5 Satış İadeleri</a><a class="h2" href="#15-cari-ve-finans">15. Cari ve Finans</a><a class="h3" href="#151-cari-hesaplar">15.1 Cari Hesaplar</a><a class="h3" href="#152-kasa-ve-bankalar">15.2 Kasa ve Bankalar</a><a class="h3" href="#153-tahsilatlar">15.3 Tahsilatlar</a><a class="h3" href="#154-ödemeler">15.4 Ödemeler</a><a class="h3" href="#155-çek-ve-senetler">15.5 Çek ve Senetler</a><a class="h3" href="#156-yaşlandırma">15.6 Yaşlandırma</a><a class="h2" href="#16-muhasebe">16. Muhasebe</a><a class="h3" href="#161-muhasebe-paneli">16.1 Muhasebe paneli</a><a class="h3" href="#162-yevmiye-defteri">16.2 Yevmiye defteri</a><a class="h3" href="#163-hesap-planı">16.3 Hesap planı</a><a class="h3" href="#164-mizan">16.4 Mizan</a><a class="h3" href="#165-bilanço">16.5 Bilanço</a><a class="h3" href="#166-gelir-tablosu">16.6 Gelir tablosu</a><a class="h3" href="#167-e-fatura">16.7 e-Fatura</a><a class="h2" href="#17-sözleşmeler">17. Sözleşmeler</a><a class="h3" href="#171-sözleşmeler">17.1 Sözleşmeler</a><a class="h3" href="#172-sözleşme-türleri">17.2 Sözleşme Türleri</a><a class="h2" href="#18-bütçe">18. Bütçe</a><a class="h3" href="#181-bütçeler">18.1 Bütçeler</a><a class="h3" href="#182-bütçe-girişleri">18.2 Bütçe Girişleri</a><a class="h3" href="#183-bütçe-kalemleri">18.3 Bütçe Kalemleri</a><a class="h2" href="#19-araç-ve-filo">19. Araç ve Filo</a><a class="h3" href="#191-araçlar">19.1 Araçlar</a><a class="h3" href="#192-yakıt-defteri">19.2 Yakıt Defteri</a><a class="h3" href="#193-araçlarım">19.3 Araçlarım</a><a class="h2" href="#20-raporlar">20. Raporlar</a><a class="h3" href="#201-satış-analizi">20.1 Satış Analizi</a><a class="h3" href="#202-alış-analizi">20.2 Alış Analizi</a><a class="h3" href="#203-nakit-akışı">20.3 Nakit Akışı</a><a class="h2" href="#21-onay-süreçleri">21. Onay Süreçleri</a><a class="h3" href="#211-tüm-talepler">21.1 Tüm Talepler</a><a class="h3" href="#212-akış-tanımları">21.2 Akış Tanımları</a><a class="h2" href="#22-organizasyon">22. Organizasyon</a><a class="h3" href="#221-şirketler">22.1 Şirketler</a><a class="h3" href="#222-şubeler">22.2 Şubeler</a><a class="h3" href="#223-kullanıcılar">22.3 Kullanıcılar</a><a class="h3" href="#224-roller-ve-izinler">22.4 Roller ve İzinler</a><a class="h2" href="#23-sistem">23. Sistem</a><a class="h3" href="#231-denetim-kaydı">23.1 Denetim Kaydı</a><a class="h3" href="#232-ayarlar">23.2 Ayarlar</a><a class="h2" href="#ek-a-ortak-kalıplar">Ek A. Ortak kalıplar</a><a class="h2" href="#ek-b-ilgili-belgeler">Ek B. İlgili belgeler</a>
+    </nav>
+  </aside>
+  <main class="main" id="top">
+    <p class="print-hint">Satış / demo kılavuzu · Yazdır: <strong>Ctrl+P → PDF olarak kaydet</strong></p>
+    <section class="hero">
+  <div class="eyebrow">Spring Boot 3.5 · Vaadin 24 · Satış / demo dokümanı</div>
+  <h1>EnterprisePulse.Java — Kullanıcı / Ekran Kılavuzu</h1>
+  <p>Modül gruplarına göre ekran kılavuzu. Yetkiye göre menü öğeleri görünür; demo veri Pulse Teknoloji üzerindedir.</p>
+  <div class="meta">
+    <span class="pill">TR / EN</span>
+    <span class="pill">Ctrl+P → PDF</span>
+    <span class="pill">EnterprisePulse.Java</span>
+  </div>
+</section><div class="card"><div class="gallery">
+<figure class="shot"><img src="screenshots/dashboard.png" alt="Gösterge paneli"/><figcaption>Gösterge paneli</figcaption></figure>
+<figure class="shot"><img src="screenshots/login.png" alt="Giriş ekranı"/><figcaption>Giriş ekranı</figcaption></figure>
+</div></div><blockquote>Bu belge tarayıcıdan veya editörden <strong>PDF olarak yazdır</strong> ile PDF’e dönüştürülebilir.</blockquote><h2 id="0-giriş">0. Giriş</h2><ul><li><strong>Ürün / stack:</strong> EnterprisePulse.Java — Spring Boot 3.5 API + Vaadin 24</li><li><strong>Web:</strong> <code>http://localhost:8181</code> · <strong>API:</strong> <code>http://localhost:8180</code></li><li><strong>Demo:</strong> <code>admin@enterprisepulse.dev</code> / <code>Admin123!</code>, <code>manager@…</code> / <code>Manager123!</code>, <code>employee@…</code> / <code>Employee123!</code></li><li><strong>Önemli:</strong> Demo veri <strong>Pulse Teknoloji · Genel Merkez</strong> üzerindedir. Pulse Lojistik seçilirse çoğu liste boştur.</li><li>Liste ekranları <code>/r/{kaynak}</code> Vaadin rotalarındadır.</li></ul><p>Bölüm numaraları sol menü gruplarına, alt başlıklar menü öğelerine karşılık gelir (ör. <strong>2. İnsan Kaynakları</strong> → <strong>2.1 İzinlerim</strong>).</p><hr/><h2 id="1-genel">1. Genel</h2><div class="gallery">
+<figure class="shot"><img src="screenshots/dashboard.png" alt="Gösterge paneli"/><figcaption>Gösterge paneli</figcaption></figure>
+</div><p>Menüdeki <strong>Genel</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p><div class="card"><h3 id="11-gösterge-paneli">1.1 Gösterge Paneli</h3><ul><li><strong>Rota / kaynak:</strong> <code>/</code></li></ul><p>Kurumsal gösterge paneli. Oturumdaki kullanıcının yetkilerine göre KPI kartları gösterir: onay bekleyenler, okunmamış bildirimler, aktif kullanıcılar, İK (kalan izin, bugün izinde), demirbaş zimmetleri, stok ve finans özetleri. Kartlara tıklayınca ilgili liste veya self-servis sayfasına gider. Üst barda şirket/şube seçici, dil (TR/EN), tema, bildirim zili ve profil menüsü bulunur.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="12-onay-kutum">1.2 Onay Kutum</h3><ul><li><strong>Rota / kaynak:</strong> <code>workflow/inbox</code></li></ul><p>Onay kutusu. Kullanıcıya atanmış bekleyen onay adımlarını listeler (izin, zimmet, masraf vb.). Her satırda belge türü, talep sahibi ve özet görünür. Açınca belge özeti ile Onayla / Reddet (gerekçe) işlemleri yapılır. Süreç bitince belge durumu güncellenir ve bildirim gider.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div></div><hr/><h2 id="2-insan-kaynakları">2. İnsan Kaynakları</h2><div class="gallery">
+<figure class="shot"><img src="screenshots/my-leave.png" alt="İzinlerim"/><figcaption>İzinlerim</figcaption></figure>
+</div><p>Menüdeki <strong>İnsan Kaynakları</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p><div class="card"><h3 id="21-izinlerim">2.1 İzinlerim</h3><ul><li><strong>Rota / kaynak:</strong> <code>hr/my-leave</code></li></ul><p>Self-servis izin bakiyesi ve talepleri. Yıl bazında izin türü kartları (hak, kullanılan, bekleyen, kalan). Yeni talep: tür, tarih aralığı, gün hesabı, açıklama. Talepler durum etiketleriyle listelenir. Yönetici kendi bakiyesini görür; onay Onay Kutum üzerinden yürür.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="22-mesaim">2.2 Mesaim</h3><ul><li><strong>Rota / kaynak:</strong> <code>hr/my-attendance</code></li></ul><p>Mesai / giriş-çıkış self-servisi. Günlük mesai, geç kalma ve fazla mesai özeti. Personel kendi kayıtlarını görür; İK puantajda düzeltme yapabilir.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="23-organizasyon-şeması">2.3 Organizasyon Şeması</h3><ul><li><strong>Rota / kaynak:</strong> <code>hr/org-chart</code></li></ul><p>Organizasyon şeması. Departman ve yönetici hiyerarşisine göre personeli ağaç veya iç içe listede gösterir.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="24-personel">2.4 Personel</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/employees</code></li><li><strong>Metadata resource:</strong> <code>employees</code></li><li><strong>İzinler:</strong> <code>employees:read</code></li></ul><p>Personel kartları listesi ve detay. Sicil, departman, pozisyon, yönetici, işe giriş, durum. Detayda izin, zimmet, ücret, eğitim, sözleşme sekmeleri (yetkiye göre).</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="25-departmanlar">2.5 Departmanlar</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/departments</code></li><li><strong>Metadata resource:</strong> <code>departments</code></li><li><strong>İzinler:</strong> <code>departments:read</code></li></ul><p>Departman tanımları. Kod, ad, üst departman, yönetici. Org şeması buradaki hiyerarşiyi kullanır.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="26-pozisyonlar">2.6 Pozisyonlar</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/positions</code></li><li><strong>Metadata resource:</strong> <code>positions</code></li><li><strong>İzinler:</strong> <code>positions:read</code></li></ul><p>Pozisyon / unvan tanımları. Departman ilişkisi ve personel atamalarında kullanılır.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="27-izin-talepleri">2.7 İzin Talepleri</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/leave-requests</code></li><li><strong>Metadata resource:</strong> <code>leave-requests</code></li><li><strong>İzinler:</strong> <code>leave:read</code></li></ul><p>İK görünümü: tüm izin talepleri. Durum, tür, personel, tarih filtresi.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="28-izin-ayarları">2.8 İzin Ayarları</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/leave-types</code></li><li><strong>Metadata resource:</strong> <code>leave-types</code></li><li><strong>İzinler:</strong> <code>leave:update</code></li></ul><p>İzin türü ayarları: yıllık, mazeret vb. Hak günü, taşıma, onay gereksinimi.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="29-puantaj">2.9 Puantaj</h3><ul><li><strong>Rota / kaynak:</strong> <code>hr/timesheet</code></li><li><strong>İzinler:</strong> <code>attendance:read</code></li></ul><p>Aylık puantaj çizelgesi. Personel × gün: mesai, izin, resmi tatil, İK düzeltmeleri.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="210-vardiya-planlama">2.10 Vardiya Planlama</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/shifts</code></li><li><strong>Metadata resource:</strong> <code>shifts</code></li><li><strong>İzinler:</strong> <code>attendance:read</code></li></ul><p>Vardiya tanımları ve haftalık plan. Gece vardiyası, kopyalama, personel ataması.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div></div><hr/><h2 id="3-masraf-ve-harcırah">3. Masraf ve Harcırah</h2><p>Menüdeki <strong>Masraf ve Harcırah</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p><div class="card"><h3 id="31-masraflarım">3.1 Masraflarım</h3><ul><li><strong>Rota / kaynak:</strong> <code>expenses/my</code></li></ul><p>Personelin kendi masraf formları. Taslak, fiş eki, onaya gönderme, ödeme durumu.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="32-masraf-formları">3.2 Masraf Formları</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/expense-reports</code></li><li><strong>Metadata resource:</strong> <code>expense-reports</code></li><li><strong>İzinler:</strong> <code>expenses:read</code></li></ul><p>Masraf formları (yönetici/finans). Onay, red, kasa/banka ödemesi, proje bağlantısı.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="33-masraf-türleri">3.3 Masraf Türleri</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/expense-categories</code></li><li><strong>Metadata resource:</strong> <code>expense-categories</code></li><li><strong>İzinler:</strong> <code>expenses:update</code></li></ul><p>Masraf türleri: limit, fiş zorunluluğu, harcırah ve km ücreti.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div></div><hr/><h2 id="4-bordro">4. Bordro</h2><p>Menüdeki <strong>Bordro</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p><div class="card"><h3 id="41-bordrolarım">4.1 Bordrolarım</h3><ul><li><strong>Rota / kaynak:</strong> <code>payroll/my</code></li></ul><p>Personelin kendi ücret pusulaları. Dönem, brüt, kesinti, net.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="42-bordrolar">4.2 Bordrolar</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/payroll-periods</code></li><li><strong>Metadata resource:</strong> <code>payroll-periods</code></li><li><strong>İzinler:</strong> <code>payroll:read</code></li></ul><p>Bordro dönemleri. Hesaplama, onay, maaş ödemesi ve geri alma.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="43-ücretler">4.3 Ücretler</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/salary-records</code></li><li><strong>Metadata resource:</strong> <code>salary-records</code></li><li><strong>İzinler:</strong> <code>payroll:read</code></li></ul><p>Ücret kayıtları ve geçmiş.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="44-bordro-parametreleri">4.4 Bordro parametreleri</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/payroll-parameters</code></li><li><strong>Metadata resource:</strong> <code>payroll-parameters</code></li><li><strong>İzinler:</strong> <code>payroll:update</code></li></ul><p>Yıllık bordro parametreleri, SGK / vergi dilimleri.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div></div><hr/><h2 id="5-işe-alım">5. İşe Alım</h2><p>Menüdeki <strong>İşe Alım</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p><div class="card"><h3 id="51-mülakatlarım">5.1 Mülakatlarım</h3><ul><li><strong>Rota / kaynak:</strong> <code>recruitment/interviews</code></li></ul><p>Mülakatçıya atanmış mülakatlar. Puan, tavsiye, not.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="52-iş-ilanları">5.2 İş İlanları</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/job-postings</code></li><li><strong>Metadata resource:</strong> <code>job-postings</code></li><li><strong>İzinler:</strong> <code>recruitment:read</code></li></ul><p>İş ilanları: yayınlama, bekletme, kapatma; başvuru hattına geçiş.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="53-adaylar">5.3 Adaylar</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/candidates</code></li><li><strong>Metadata resource:</strong> <code>candidates</code></li><li><strong>İzinler:</strong> <code>recruitment:read</code></li></ul><p>Aday havuzu, CV, profil.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="54-başvurular">5.4 Başvurular</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/job-applications</code></li><li><strong>Metadata resource:</strong> <code>job-applications</code></li><li><strong>İzinler:</strong> <code>recruitment:read</code></li></ul><p>Başvurular ve aşama hattı. Teklif, ret, personele dönüştürme.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div></div><hr/><h2 id="6-performans-ve-eğitim">6. Performans ve Eğitim</h2><p>Menüdeki <strong>Performans ve Eğitim</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p><div class="card"><h3 id="61-değerlendirmelerim">6.1 Değerlendirmelerim</h3><ul><li><strong>Rota / kaynak:</strong> <code>performance/my</code></li></ul><p>Öz ve yönetici değerlendirme formları. Hedefler, yetkinlik puanları.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="62-eğitimlerim">6.2 Eğitimlerim</h3><ul><li><strong>Rota / kaynak:</strong> <code>training/my</code></li></ul><p>Kayıtlı eğitimler, zorunlu sertifikalar, geri bildirim.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="63-değerlendirme-dönemleri">6.3 Değerlendirme Dönemleri</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/review-cycles</code></li><li><strong>Metadata resource:</strong> <code>review-cycles</code></li><li><strong>İzinler:</strong> <code>performance:read</code></li></ul><p>Performans değerlendirme dönemleri: başlatma, kapatma, özet.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="64-yetkinlikler">6.4 Yetkinlikler</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/competencies</code></li><li><strong>Metadata resource:</strong> <code>competencies</code></li><li><strong>İzinler:</strong> <code>performance:read</code></li></ul><p>Yetkinlik kataloğu.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="65-eğitim-oturumları">6.5 Eğitim Oturumları</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/training-sessions</code></li><li><strong>Metadata resource:</strong> <code>training-sessions</code></li><li><strong>İzinler:</strong> <code>training:read</code></li></ul><p>Eğitim oturumları: katılımcı, puan, maliyet.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="66-eğitim-kataloğu">6.6 Eğitim Kataloğu</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/training-courses</code></li><li><strong>Metadata resource:</strong> <code>training-courses</code></li><li><strong>İzinler:</strong> <code>training:read</code></li></ul><p>Eğitim kataloğu tanımları.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="67-zorunlu-eğitim-uyumu">6.7 Zorunlu Eğitim Uyumu</h3><ul><li><strong>Rota / kaynak:</strong> <code>training/compliance</code></li><li><strong>İzinler:</strong> <code>training:read</code></li></ul><p>Zorunlu eğitim uyum matrisi (personel × kurs).</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div></div><hr/><h2 id="7-destek">7. Destek</h2><div class="gallery">
+<figure class="shot"><img src="screenshots/support.png" alt="Destek kuyruğu"/><figcaption>Destek kuyruğu</figcaption></figure>
+</div><p>Menüdeki <strong>Destek</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p><div class="card"><h3 id="71-destek-taleplerim">7.1 Destek Taleplerim</h3><ul><li><strong>Rota / kaynak:</strong> <code>support/my</code></li></ul><p>Self-servis destek: açma, yanıt, ek, çözüm onayı / yeniden açma, puan.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="72-destek-kuyruğu">7.2 Destek Kuyruğu</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/tickets</code></li><li><strong>Metadata resource:</strong> <code>tickets</code></li><li><strong>İzinler:</strong> <code>support:read</code></li></ul><p>Destek kuyruğu: SLA, öncelik, atama, dahili not, durum geçişleri.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="73-destek-ayarları">7.3 Destek Ayarları</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/ticket-categories</code></li><li><strong>Metadata resource:</strong> <code>ticket-categories</code></li><li><strong>İzinler:</strong> <code>support:update</code></li></ul><p>Kategori, varsayılan sorumlu, SLA hedefleri.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div></div><hr/><h2 id="8-proje-yönetimi">8. Proje Yönetimi</h2><p>Menüdeki <strong>Proje Yönetimi</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p><div class="card"><h3 id="81-görevlerim">8.1 Görevlerim</h3><ul><li><strong>Rota / kaynak:</strong> <code>projects/my-tasks</code></li></ul><p>Kullanıcıya atanmış proje görevleri.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="82-zaman-çizelgesi">8.2 Zaman Çizelgesi</h3><ul><li><strong>Rota / kaynak:</strong> <code>projects/timesheet</code></li></ul><p>Haftalık zaman çizelgesi: projeye süre kaydı.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="83-projeler">8.3 Projeler</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/projects</code></li><li><strong>Metadata resource:</strong> <code>projects</code></li></ul><p>Proje listesi ve detay: ekip, görevler, bütçe, ilerleme.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div></div><hr/><h2 id="9-zimmet-ve-demirbaş">9. Zimmet ve Demirbaş</h2><div class="gallery">
+<figure class="shot"><img src="screenshots/assets.png" alt="Demirbaşlar"/><figcaption>Demirbaşlar</figcaption></figure>
+<figure class="shot"><img src="screenshots/asset-detail.png" alt="Demirbaş detayı"/><figcaption>Demirbaş detayı</figcaption></figure>
+</div><p>Menüdeki <strong>Zimmet ve Demirbaş</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p><div class="card"><h3 id="91-zimmetlerim">9.1 Zimmetlerim</h3><ul><li><strong>Rota / kaynak:</strong> <code>assets/my</code></li></ul><p>Zimmetimdeki demirbaşlar; iade / onay bekleyenler.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="92-demirbaşlar">9.2 Demirbaşlar</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/assets</code></li><li><strong>Metadata resource:</strong> <code>assets</code></li><li><strong>İzinler:</strong> <code>assets:read</code></li></ul><p>Demirbaş kartları: kategori, durum (zimmetli/depo/hurda/bakım), marka-model, QR.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="93-zimmetler">9.3 Zimmetler</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/asset-assignments</code></li><li><strong>Metadata resource:</strong> <code>asset-assignments</code></li><li><strong>İzinler:</strong> <code>assets:read</code></li></ul><p>Zimmet / iade / devir kayıtları ve tutanak onayları.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="94-demirbaş-sayımı">9.4 Demirbaş Sayımı</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/asset-counts</code></li><li><strong>Metadata resource:</strong> <code>asset-counts</code></li><li><strong>İzinler:</strong> <code>assets:read</code></li></ul><p>Demirbaş sayımı ve fark raporu.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="95-demirbaş-ayarları">9.5 Demirbaş Ayarları</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/asset-categories</code></li><li><strong>Metadata resource:</strong> <code>asset-categories</code></li><li><strong>İzinler:</strong> <code>assets:update</code></li></ul><p>Demirbaş kategori ve amortisman ayarları.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div></div><hr/><h2 id="10-stok-ve-depo">10. Stok ve Depo</h2><div class="gallery">
+<figure class="shot"><img src="screenshots/inventory.png" alt="Stok durumu"/><figcaption>Stok durumu</figcaption></figure>
+</div><p>Menüdeki <strong>Stok ve Depo</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p><div class="card"><h3 id="101-stok-durumu">10.1 Stok Durumu</h3><ul><li><strong>Rota / kaynak:</strong> <code>inventory</code></li><li><strong>İzinler:</strong> <code>inventory:read</code></li></ul><p>Stok durumu: kalem, minimum altı, stok değeri, depo; kritik filtre.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="102-ürünler">10.2 Ürünler</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/products</code></li><li><strong>Metadata resource:</strong> <code>products</code></li><li><strong>İzinler:</strong> <code>inventory:read</code></li></ul><p>Ürün ve varyantlar: SKU, barkod, lot/seri takibi, birim.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="103-stok-hareketleri">10.3 Stok Hareketleri</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/stock-movements</code></li><li><strong>Metadata resource:</strong> <code>stock-movements</code></li><li><strong>İzinler:</strong> <code>inventory:read</code></li></ul><p>Stok fişleri: giriş, çıkış, transfer, düzeltme; lot/seri satırları.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="104-stok-sayımı">10.4 Stok Sayımı</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/stock-counts</code></li><li><strong>Metadata resource:</strong> <code>stock-counts</code></li><li><strong>İzinler:</strong> <code>inventory:read</code></li></ul><p>Stok sayımı ve fark düzeltmesi.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="105-depo-ve-kategoriler">10.5 Depo ve Kategoriler</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/warehouses</code></li><li><strong>Metadata resource:</strong> <code>warehouses</code></li><li><strong>İzinler:</strong> <code>inventory:update</code></li></ul><p>Depo ve stok kategori tanımları.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div></div><hr/><h2 id="11-üretim">11. Üretim</h2><p>Menüdeki <strong>Üretim</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p><div class="card"><h3 id="111-iş-emirleri">11.1 İş emirleri</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/work-orders</code></li><li><strong>Metadata resource:</strong> <code>work-orders</code></li><li><strong>İzinler:</strong> <code>production:read</code></li></ul><p>Üretim iş emirleri: serbest bırakma, üretim kaydı, malzeme, kapatma.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="112-ürün-ağaçları">11.2 Ürün ağaçları</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/bill-of-materials</code></li><li><strong>Metadata resource:</strong> <code>bill-of-materials</code></li><li><strong>İzinler:</strong> <code>production:read</code></li></ul><p>Ürün ağacı (BOM): bileşenler, standart maliyet.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="113-malzeme-ihtiyacı">11.3 Malzeme ihtiyacı</h3><ul><li><strong>Rota / kaynak:</strong> <code>production/requirements</code></li><li><strong>İzinler:</strong> <code>production:read</code></li></ul><p>MRP / malzeme ihtiyacı: net ihtiyaç, talep veya iş emri.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div></div><hr/><h2 id="12-satın-alma">12. Satın Alma</h2><p>Menüdeki <strong>Satın Alma</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p><div class="card"><h3 id="121-satın-alma-talepleri">12.1 Satın Alma Talepleri</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/purchase-requests</code></li><li><strong>Metadata resource:</strong> <code>purchase-requests</code></li><li><strong>İzinler:</strong> <code>workflow:start</code>, <code>purchasing:create</code>, <code>purchasing:read</code></li></ul><p>Satın alma talepleri ve onay.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="122-tedarikçi-teklifleri">12.2 Tedarikçi Teklifleri</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/supplier-quotes</code></li><li><strong>Metadata resource:</strong> <code>supplier-quotes</code></li><li><strong>İzinler:</strong> <code>purchasing:read</code></li></ul><p>Tedarikçi teklifleri ve karşılaştırma.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="123-satın-alma-siparişleri">12.3 Satın Alma Siparişleri</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/purchase-orders</code></li><li><strong>Metadata resource:</strong> <code>purchase-orders</code></li><li><strong>İzinler:</strong> <code>purchasing:read</code></li></ul><p>Satın alma siparişleri: teslim / fatura miktarları.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="124-mal-kabul">12.4 Mal Kabul</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/goods-receipts</code></li><li><strong>Metadata resource:</strong> <code>goods-receipts</code></li><li><strong>İzinler:</strong> <code>purchasing:read</code></li></ul><p>Mal kabul irsaliyeleri; stoğa giriş.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="125-alış-faturaları">12.5 Alış Faturaları</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/purchase-invoices</code></li><li><strong>Metadata resource:</strong> <code>purchase-invoices</code></li><li><strong>İzinler:</strong> <code>purchasing:read</code>, <code>finance:read</code></li></ul><p>Alış faturaları; borç ve muhasebe bağlantısı.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div></div><hr/><h2 id="13-crm">13. CRM</h2><div class="gallery">
+<figure class="shot"><img src="screenshots/crm-opportunity.png" alt="Satış fırsatı"/><figcaption>Satış fırsatı</figcaption></figure>
+<figure class="shot"><img src="screenshots/crm-pipeline.png" alt="CRM hattı"/><figcaption>CRM hattı</figcaption></figure>
+</div><p>Menüdeki <strong>CRM</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p><div class="card"><h3 id="131-potansiyel-müşteriler">13.1 Potansiyel müşteriler</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/leads</code></li><li><strong>Metadata resource:</strong> <code>leads</code></li><li><strong>İzinler:</strong> <code>crm:read</code></li></ul><p>Potansiyel müşteriler; cariye / fırsata dönüştürme.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="132-satış-fırsatları">13.2 Satış fırsatları</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/opportunities</code></li><li><strong>Metadata resource:</strong> <code>opportunities</code></li><li><strong>İzinler:</strong> <code>crm:read</code></li></ul><p>Satış fırsatları: aşama, tutar, ağırlıklı değer, teklif bağlantısı.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="133-aktiviteler">13.3 Aktiviteler</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/crm-activities</code></li><li><strong>Metadata resource:</strong> <code>crm-activities</code></li><li><strong>İzinler:</strong> <code>crm:read</code></li></ul><p>Arama, toplantı, görev aktiviteleri; geciken / bugün.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div></div><hr/><h2 id="14-satış">14. Satış</h2><div class="gallery">
+<figure class="shot"><img src="screenshots/sales-invoices.png" alt="Satış faturaları"/><figcaption>Satış faturaları</figcaption></figure>
+</div><p>Menüdeki <strong>Satış</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p><div class="card"><h3 id="141-satış-teklifleri">14.1 Satış Teklifleri</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/sales-quotes</code></li><li><strong>Metadata resource:</strong> <code>sales-quotes</code></li><li><strong>İzinler:</strong> <code>sales:read</code></li></ul><p>Satış teklifleri: kalemler, kabul ile siparişe dönüşüm.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="142-satış-siparişleri">14.2 Satış Siparişleri</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/sales-orders</code></li><li><strong>Metadata resource:</strong> <code>sales-orders</code></li><li><strong>İzinler:</strong> <code>sales:read</code></li></ul><p>Satış siparişleri: rezervasyon, sevk, faturalama durumu.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="143-sevk-irsaliyeleri">14.3 Sevk İrsaliyeleri</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/delivery-notes</code></li><li><strong>Metadata resource:</strong> <code>delivery-notes</code></li><li><strong>İzinler:</strong> <code>sales:read</code></li></ul><p>Sevk irsaliyeleri; stok çıkışı.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="144-satış-faturaları">14.4 Satış Faturaları</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/sales-invoices</code></li><li><strong>Metadata resource:</strong> <code>sales-invoices</code></li><li><strong>İzinler:</strong> <code>sales:read</code>, <code>finance:read</code></li></ul><p>Satış faturaları: tahsilat durumu, e-fatura bağlantısı.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="145-satış-iadeleri">14.5 Satış İadeleri</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/sales-returns</code></li><li><strong>Metadata resource:</strong> <code>sales-returns</code></li><li><strong>İzinler:</strong> <code>sales:read</code>, <code>finance:read</code></li></ul><p>Satış iadeleri.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div></div><hr/><h2 id="15-cari-ve-finans">15. Cari ve Finans</h2><div class="gallery">
+<figure class="shot"><img src="screenshots/treasury.png" alt="Kasa ve bankalar"/><figcaption>Kasa ve bankalar</figcaption></figure>
+<figure class="shot"><img src="screenshots/finance-accounts.png" alt="Kasa / banka"/><figcaption>Kasa / banka</figcaption></figure>
+</div><p>Menüdeki <strong>Cari ve Finans</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p><div class="card"><h3 id="151-cari-hesaplar">15.1 Cari Hesaplar</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/business-partners</code></li><li><strong>Metadata resource:</strong> <code>business-partners</code></li><li><strong>İzinler:</strong> <code>partners:read</code></li></ul><p>Cari hesaplar (müşteri/tedarikçi): vade, kredi limiti, döviz, hareketler.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="152-kasa-ve-bankalar">15.2 Kasa ve Bankalar</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/treasury-accounts</code></li><li><strong>Metadata resource:</strong> <code>treasury-accounts</code></li><li><strong>İzinler:</strong> <code>finance:read</code></li></ul><p>Kasa ve banka hesapları. Kod, tür (kasa/banka), para birimi, IBAN, aktiflik. Hareketler tahsilat/ödeme/çek ile oluşur. Demo seed Pulse Teknoloji üzerindedir.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="153-tahsilatlar">15.3 Tahsilatlar</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/partner-payments</code></li><li><strong>Metadata resource:</strong> <code>partner-payments</code></li><li><strong>İzinler:</strong> <code>finance:read</code></li></ul><p>Tahsilat ve ödemeler: yöntem, kasa/banka, fatura mahsupları.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="154-ödemeler">15.4 Ödemeler</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/partner-payments</code></li><li><strong>Metadata resource:</strong> <code>partner-payments</code></li><li><strong>İzinler:</strong> <code>finance:read</code></li></ul><p>Tahsilat ve ödemeler: yöntem, kasa/banka, fatura mahsupları.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="155-çek-ve-senetler">15.5 Çek ve Senetler</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/cheques</code></li><li><strong>Metadata resource:</strong> <code>cheques</code></li><li><strong>İzinler:</strong> <code>finance:read</code></li></ul><p>Çek ve senet portföyü: yatırma, tahsil, ciro.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="156-yaşlandırma">15.6 Yaşlandırma</h3><ul><li><strong>Rota / kaynak:</strong> <code>finance/aging</code></li><li><strong>İzinler:</strong> <code>finance:read</code></li></ul><p>Alacak / borç yaşlandırma raporu.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div></div><hr/><h2 id="16-muhasebe">16. Muhasebe</h2><div class="gallery">
+<figure class="shot"><img src="screenshots/accounting.png" alt="Muhasebe"/><figcaption>Muhasebe</figcaption></figure>
+</div><p>Menüdeki <strong>Muhasebe</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p><div class="card"><h3 id="161-muhasebe-paneli">16.1 Muhasebe paneli</h3><ul><li><strong>Rota / kaynak:</strong> <code>accounting</code></li><li><strong>İzinler:</strong> <code>accounting:read</code></li></ul><p>Muhasebe paneli: kasa, alacak, borç, net kâr, aylık gelir-gider, bekleyen belgeleri muhasebeleştirme.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="162-yevmiye-defteri">16.2 Yevmiye defteri</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/journal-entries</code></li><li><strong>Metadata resource:</strong> <code>journal-entries</code></li><li><strong>İzinler:</strong> <code>accounting:read</code></li></ul><p>Yevmiye defteri: fiş listeleme, kesinleştirme, ters kayıt.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="163-hesap-planı">16.3 Hesap planı</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/ledger-accounts</code></li><li><strong>Metadata resource:</strong> <code>ledger-accounts</code></li><li><strong>İzinler:</strong> <code>accounting:read</code></li></ul><p>Tekdüzen hesap planı; alt hesap ekleme.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="164-mizan">16.4 Mizan</h3><ul><li><strong>Rota / kaynak:</strong> <code>accounting/trial-balance</code></li><li><strong>İzinler:</strong> <code>accounting:read</code></li></ul><p>Mizan: dönem hareketleri ve bakiyeler.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="165-bilanço">16.5 Bilanço</h3><ul><li><strong>Rota / kaynak:</strong> <code>accounting/balance-sheet</code></li><li><strong>İzinler:</strong> <code>accounting:read</code></li></ul><p>Bilanço raporu.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="166-gelir-tablosu">16.6 Gelir tablosu</h3><ul><li><strong>Rota / kaynak:</strong> <code>accounting/income-statement</code></li><li><strong>İzinler:</strong> <code>accounting:read</code></li></ul><p>Gelir tablosu.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="167-e-fatura">16.7 e-Fatura</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/e-invoices</code></li><li><strong>Metadata resource:</strong> <code>e-invoices</code></li><li><strong>İzinler:</strong> <code>einvoice:read</code></li></ul><p>e-Fatura kuyruğu: UBL-TR, GİB durum simülasyonu, gelen/giden.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div></div><hr/><h2 id="17-sözleşmeler">17. Sözleşmeler</h2><div class="gallery">
+<figure class="shot"><img src="screenshots/contracts.png" alt="Sözleşmeler"/><figcaption>Sözleşmeler</figcaption></figure>
+</div><p>Menüdeki <strong>Sözleşmeler</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p><div class="card"><h3 id="171-sözleşmeler">17.1 Sözleşmeler</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/contracts</code></li><li><strong>Metadata resource:</strong> <code>contracts</code></li><li><strong>İzinler:</strong> <code>contracts:read</code></li></ul><p>Sözleşmeler: cari/personel, yürürlük, yenileme, fesih, ekler.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="172-sözleşme-türleri">17.2 Sözleşme Türleri</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/contract-types</code></li><li><strong>Metadata resource:</strong> <code>contract-types</code></li><li><strong>İzinler:</strong> <code>contracts:update</code></li></ul><p>Sözleşme türü tanımları.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div></div><hr/><h2 id="18-bütçe">18. Bütçe</h2><p>Menüdeki <strong>Bütçe</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p><div class="card"><h3 id="181-bütçeler">18.1 Bütçeler</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/budgets</code></li><li><strong>Metadata resource:</strong> <code>budgets</code></li><li><strong>İzinler:</strong> <code>budgets:read</code></li></ul><p>Şirket / departman bütçeleri: plan vs gerçekleşen, sapma.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="182-bütçe-girişleri">18.2 Bütçe Girişleri</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/budget-entries</code></li><li><strong>Metadata resource:</strong> <code>budget-entries</code></li><li><strong>İzinler:</strong> <code>budgets:read</code></li></ul><p>Gerçekleşen bütçe girişleri (kira, reklam vb.).</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="183-bütçe-kalemleri">18.3 Bütçe Kalemleri</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/budget-items</code></li><li><strong>Metadata resource:</strong> <code>budget-items</code></li><li><strong>İzinler:</strong> <code>budgets:update</code></li></ul><p>Bütçe kalemi ve kategori eşlemesi.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div></div><hr/><h2 id="19-araç-ve-filo">19. Araç ve Filo</h2><p>Menüdeki <strong>Araç ve Filo</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p><div class="card"><h3 id="191-araçlar">19.1 Araçlar</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/vehicles</code></li><li><strong>Metadata resource:</strong> <code>vehicles</code></li><li><strong>İzinler:</strong> <code>fleet:read</code></li></ul><p>Filo araç kartları: sürücü, bakım, muayene, sigorta.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="192-yakıt-defteri">19.2 Yakıt Defteri</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/vehicle-fuel-entries</code></li><li><strong>Metadata resource:</strong> <code>vehicle-fuel-entries</code></li><li><strong>İzinler:</strong> <code>fleet:read</code></li></ul><p>Yakıt defteri.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="193-araçlarım">19.3 Araçlarım</h3><ul><li><strong>Rota / kaynak:</strong> <code>fleet/my</code></li></ul><p>Sürücünün zimmetli araçları; yakıt ve km girişi.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div></div><hr/><h2 id="20-raporlar">20. Raporlar</h2><p>Menüdeki <strong>Raporlar</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p><div class="card"><h3 id="201-satış-analizi">20.1 Satış Analizi</h3><ul><li><strong>Rota / kaynak:</strong> <code>reports/sales</code></li><li><strong>İzinler:</strong> <code>sales:read</code></li></ul><p>Satış analizi raporu.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="202-alış-analizi">20.2 Alış Analizi</h3><ul><li><strong>Rota / kaynak:</strong> <code>reports/purchases</code></li><li><strong>İzinler:</strong> <code>purchasing:read</code></li></ul><p>Alış analizi.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="203-nakit-akışı">20.3 Nakit Akışı</h3><ul><li><strong>Rota / kaynak:</strong> <code>reports/cash-flow</code></li><li><strong>İzinler:</strong> <code>finance:read</code></li></ul><p>Nakit akışı.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div></div><hr/><h2 id="21-onay-süreçleri">21. Onay Süreçleri</h2><p>Menüdeki <strong>Onay Süreçleri</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p><div class="card"><h3 id="211-tüm-talepler">21.1 Tüm Talepler</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/workflow-instances</code></li><li><strong>Metadata resource:</strong> <code>workflow-instances</code></li><li><strong>İzinler:</strong> <code>workflow:read</code></li></ul><p>Tüm onay süreç örnekleri (yönetim).</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="212-akış-tanımları">21.2 Akış Tanımları</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/workflow-definitions</code></li><li><strong>Metadata resource:</strong> <code>workflow-definitions</code></li><li><strong>İzinler:</strong> <code>workflow:read</code></li></ul><p>Onay akış tanımları: adımlar, roller.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div></div><hr/><h2 id="22-organizasyon">22. Organizasyon</h2><p>Menüdeki <strong>Organizasyon</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p><div class="card"><h3 id="221-şirketler">22.1 Şirketler</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/companies</code></li><li><strong>Metadata resource:</strong> <code>companies</code></li><li><strong>İzinler:</strong> <code>companies:read</code></li></ul><p>Şirket (kiracı) kartları.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="222-şubeler">22.2 Şubeler</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/branches</code></li><li><strong>Metadata resource:</strong> <code>branches</code></li><li><strong>İzinler:</strong> <code>branches:read</code></li></ul><p>Şube tanımları.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="223-kullanıcılar">22.3 Kullanıcılar</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/users</code></li><li><strong>Metadata resource:</strong> <code>users</code></li><li><strong>İzinler:</strong> <code>users:read</code></li></ul><p>Kullanıcı hesapları ve şirket üyelikleri.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="224-roller-ve-izinler">22.4 Roller ve İzinler</h3><ul><li><strong>Rota / kaynak:</strong> <code>roles</code></li><li><strong>İzinler:</strong> <code>roles:read</code></li></ul><p>Rol ve izin matrisi.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div></div><hr/><h2 id="23-sistem">23. Sistem</h2><p>Menüdeki <strong>Sistem</strong> grubu. Ekranlar yetkiye göre görünür veya gizlenir.</p><div class="card"><h3 id="231-denetim-kaydı">23.1 Denetim Kaydı</h3><ul><li><strong>Rota / kaynak:</strong> <code>r/audit-logs</code></li><li><strong>Metadata resource:</strong> <code>audit-logs</code></li><li><strong>İzinler:</strong> <code>audit:read</code></li></ul><p>Denetim kaydı: kim, ne zaman, hangi alan değişti (okunabilir Geçmiş).</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div><div class="card"><h3 id="232-ayarlar">23.2 Ayarlar</h3><ul><li><strong>Rota / kaynak:</strong> <code>settings</code></li><li><strong>İzinler:</strong> <code>settings:read</code></li></ul><p>Şirket ayarları: para birimi, kur, KDV, birim, numaralandırma, genel.</p><p><strong>Nasıl kullanılır:</strong></p><ul><li>Menüden ilgili öğeyi açın.</li><li>Liste ise Ara / filtre ile kaydı bulun; <strong>Yeni</strong> veya satır detayı.</li><li>Formu kaydedin; onaylı belgeler <strong>Onay Kutum</strong>’a düşer.</li><li>Detayda <strong>Geçmiş</strong>, <strong>Dosyalar</strong> ve durum aksiyonlarını kullanın.</li></ul></div></div><hr/><h2 id="ek-a-ortak-kalıplar">Ek A. Ortak kalıplar</h2><ul><li><strong>Liste:</strong> arama, rozetler, sayfalama, + Yeni</li><li><strong>Form/detay:</strong> doğrulama, ilişkili seçiciler, durum butonları</li><li><strong>Onay:</strong> çok adımlı workflow, red gerekçesi, bildirim</li><li><strong>Çok şirket:</strong> üst bar şirket/şube seçici → <code>companyId</code> bağlamı</li></ul><h2 id="ek-b-ilgili-belgeler">Ek B. İlgili belgeler</h2><ul><li>Teknik kılavuz: <a href="teknik-kilavuz.md"><code>teknik-kilavuz.md</code></a></li><li>Kısa başlangıç: kök <code>README.md</code></li></ul>
+    <p class="footer-note">EnterprisePulse — EnterprisePulse.Java. Bu HTML, markdown kaynaktan üretilmiştir; güncelleme için md dosyasını düzenleyin.</p>
+  </main>
+</div>
+</body>
+</html>
